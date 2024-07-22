@@ -27,7 +27,7 @@ func main() {
 	fmt.Println(sum1, sum2)
 
 	http.HandleFunc("/", HelloHandler(log.Default()))
-	http.ListenAndServe(":8080", nil)
+	//http.ListenAndServe(":8080", nil)
 }
 
 // HelloWithLog 记录 r 中的路径信息到 logger, 并向 w 中写入 200 状态码和 "Hello"
