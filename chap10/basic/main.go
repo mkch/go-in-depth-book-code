@@ -17,7 +17,7 @@ func main() {
 }
 
 func add(a, b int) int {
-	fmt.Printf("f(%v, %v)\n", a, b)
+	fmt.Printf("add(%v, %v)\n", a, b)
 	return a + b
 }
 
