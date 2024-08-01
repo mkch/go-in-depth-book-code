@@ -49,3 +49,15 @@ func defConfigValue() string { return "def value" }
 func ApplyConfig(v string) {
 	fmt.Printf("apply %#v\n", v)
 }
+
+var maxID uintptr
+
+// NextID 返回下一个全局递增 ID
+func NextID() (id uintptr) {
+	id = maxID
+	if maxID == ^uintptr(0) {
+		panic("id overflow")
+	}
+	maxID++
+	return
+}
