@@ -1,28 +1,48 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"time"
+	"io/fs"
+	"os"
+	"strconv"
 )
 
 func main() {
-	go add(1, 2) // 1: go 函数调用(参数...)
-	var s1 S
-	go s1.Method1() // 2: go 方法调用()
-	go func(n int) {
-		fmt.Printf("func(%v)\n", n)
-	}(100) // 3: go 匿名函数调用()
-
-	time.Sleep(3 * time.Second) // 强制等待 3 秒钟. 以后会有更好的实现
+	Wrap2()
+	PathError()
 }
 
-func add(a, b int) int {
-	fmt.Printf("add(%v, %v)\n", a, b)
-	return a + b
+// ParseUserID 解析一个用户ID s, 如果解析失败 err 将为非 nil
+func ParseUserID(s string) (id int, err error) {
+	id, err = strconv.Atoi(s)
+	if err != nil {
+		err = fmt.Errorf("ParseUserID: %w", err)
+	}
+	return
 }
 
-type S struct{}
+func Wrap2() {
+	var err1 = errors.New("reason1")
+	var err2 = errors.New("reason2")
+	var err = fmt.Errorf("failed: %w and %w", err1, err2)
+	fmt.Println(err.Error())
 
-func (s S) Method1() {
-	fmt.Println("S.Method1()")
+	type Unwrapper interface {
+		Unwrap() []error
+	}
+
+	wrapped := err.(Unwrapper).Unwrap()
+	fmt.Println(wrapped)
+}
+
+func PathError() {
+	_, err := os.Open("file1")
+	if errors.Is(err, fs.ErrPermission) {
+		fmt.Println("permission denied")
+	}
+	var pathErr *fs.PathError
+	if errors.As(err, &pathErr) {
+		fmt.Println(pathErr)
+	}
 }
