@@ -79,6 +79,8 @@ func main() {
 	fmt.Println(pt2.String())
 }
 
+// DiscardG 完全可以用 下列 Discard 代替
+// 用基本接口做类型参数没有太大的实际意义
 func DiscardG[T io.Reader](r T) error {
 	_, err := io.Copy(io.Discard, r)
 	return err
@@ -91,9 +93,6 @@ func Discard(r io.Reader) error {
 
 func F[T comparable](a T) {
 	_ = a == a
-	// any 没有实现 comparable
-	//a = any(0)                         // !!语法错误!!
-	//a = any(struct{ F map[int]int }{}) // !!语法错误!!
 }
 
 func UseF() {
