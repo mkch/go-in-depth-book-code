@@ -4,7 +4,42 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
+	"strconv"
 )
+
+func F(int) (int, error) { return 0, nil }
+
+// 如果 err != nil 则引发 panic, 否则返回 a
+func Must[T any](a T, err error) T {
+	if err != nil {
+		panic(err)
+	}
+	return a
+}
+
+func UseMust() {
+	var arg1 int
+
+	// n, err := F(arg1)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// // 使用 n
+	// _ = n
+
+	n := Must(F(arg1))
+	//使用 n
+	_ = n
+
+	n = Must(strconv.Atoi("10"))
+	// 使用 n
+	_ = n
+
+	file := Must(os.Open("file1"))
+	defer file.Close()
+	// 使用 file
+}
 
 // DecodeBody 把 r 的内容解码后放入 dest 所指向的变量中
 // 类似 json.Unmarshal()
