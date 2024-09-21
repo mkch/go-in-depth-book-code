@@ -1,48 +1,80 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"io/fs"
-	"os"
-	"strconv"
 )
 
 func main() {
-	Wrap2()
-	PathError()
+	basicOp()
+	makeMap()
+	iteration()
+	dynamicKey()
 }
 
-// ParseUserID 解析一个用户ID s, 如果解析失败 err 将为非 nil
-func ParseUserID(s string) (id int, err error) {
-	id, err = strconv.Atoi(s)
-	if err != nil {
-		err = fmt.Errorf("ParseUserID: %w", err)
-	}
-	return
+func makeMap() {
+	m1 := make(map[string]int)
+	l1 := len(m1) // 0
+	m2 := make(map[string]int, 3)
+	l2 := len(m2) // 0
+
+	fmt.Println(l1, l2)
+	_, _ = m1, m2
+
+	delete(map[string]int(nil), "")
+	clear(map[string]int(nil))
 }
 
-func Wrap2() {
-	var err1 = errors.New("reason1")
-	var err2 = errors.New("reason2")
-	var err = fmt.Errorf("failed: %w and %w", err1, err2)
-	fmt.Println(err.Error())
-
-	type Unwrapper interface {
-		Unwrap() []error
+// basicOp 演示 map 基本操作
+func basicOp() {
+	// 1
+	var colors = map[string]int{
+		"Red":   0xFF0000,
+		"Green": 0x00FF00,
+		"Blue":  0x0000FF,
 	}
+	l := len(colors) // l 的值为 3
+	// 2: 读取
+	red := colors["Red"]         // read 的值为 0xFF0000
+	brown, ok := colors["Brown"] // brown 的值为 0, ok 的值为 false
+	// 3: 写入(覆盖)
+	colors["Blue"] = 255
+	// 4: 添加
+	colors["Gray"] = 0x808080
+	l = len(colors) // l 的值为 4
+	// 5: 删除
+	delete(colors, "Gray")
+	l = len(colors) // l 的值为 3
+	// 6: 清空
+	clear(colors)
+	l = len(colors) // l 的值为 0
 
-	wrapped := err.(Unwrapper).Unwrap()
-	fmt.Println(wrapped)
+	_, _, _, _ = l, red, brown, ok
 }
 
-func PathError() {
-	_, err := os.Open("file1")
-	if errors.Is(err, fs.ErrPermission) {
-		fmt.Println("permission denied")
+// iteration 演示 map 的遍历.
+func iteration() {
+	var colors = map[string]int{
+		"Red":   0xFF0000,
+		"Green": 0x00FF00,
+		"Blue":  0x0000FF,
 	}
-	var pathErr *fs.PathError
-	if errors.As(err, &pathErr) {
-		fmt.Println(pathErr)
+	for key, value := range colors {
+		fmt.Printf("%v:%#x\n", key, value)
 	}
+	for key := range colors {
+		fmt.Println(key)
+	}
+	for _, value := range colors {
+		fmt.Println(value)
+	}
+}
+
+func dynamicKey() {
+	var m = make(map[any]int)
+	m[1] = 1
+	m["2"] = 2
+	m[struct{}{}] = 3
+	m[(*func())(nil)] = 4
+	m[[...]int{1, 2, 3}] = 5
+	fmt.Println(m)
 }
