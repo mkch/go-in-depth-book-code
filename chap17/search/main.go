@@ -33,15 +33,13 @@ func Search(ctx context.Context, keyword string) (*Result, error) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	// 1
-	bingRequest, err := http.NewRequestWithContext(
+	bingRequest, err := http.NewRequestWithContext( // 1
 		ctx, http.MethodGet, bingURL.String(), nil)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	// 2
-	sogouRequest, err := http.NewRequestWithContext(
+	sogouRequest, err := http.NewRequestWithContext( // 2
 		ctx, http.MethodGet, sogouURL.String(), nil)
 	if err != nil {
 		log.Panic(err)
@@ -49,8 +47,7 @@ func Search(ctx context.Context, keyword string) (*Result, error) {
 
 	ch := make(chan *result)
 
-	// 3
-	go func() {
+	go func() { // 3
 		ch <- NewResult(http.DefaultClient.Do(bingRequest))
 	}()
 
@@ -59,13 +56,12 @@ func Search(ctx context.Context, keyword string) (*Result, error) {
 
 	}()
 
-	// 4
-	// 等待并发搜索结果
+	// 4 等待并发搜索结果
 	r := <-ch
 	// 较快的一个搜索已经返回，取消 Context
 	cancel()
-	// 5
-	// 清理落后者
+
+	// 5 清理落后者
 	failure := <-ch
 	if failure.Body != nil {
 		io.Copy(io.Discard, failure.Body)

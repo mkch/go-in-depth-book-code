@@ -56,7 +56,7 @@ func NewIdGenerator() (g func() uint64, cancel func()) {
 	return
 }
 
-// valBackupDefault 演示了 val, backup, def 三级 取值.
+// valBackupDefault 演示了 val, backup, def 三级取值.
 func valBackupDefault() {
 	val := make(chan int, 1)
 	backup := make(chan int, 1)
@@ -114,7 +114,7 @@ func sendWithDrop(c chan<- int, item int) {
 	}
 }
 
-// sendWithDrop 试图把 item 写入 ch 中,
+// sendKeepLatest 试图把 item 写入 ch 中,
 // 如果此写入会阻塞, 则抛弃已缓冲的值而写入 item.
 // 要求 c 必须为一个容量为 1 的 channel
 func sendKeepLatest(c chan int, item int) {

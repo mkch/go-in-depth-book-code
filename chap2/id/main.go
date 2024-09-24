@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"io"
 	"main/pkg"
 )
 
@@ -11,6 +13,38 @@ func main() {
 	var max = 1 // 遮蔽了内建的 max()
 	_ = max
 	// var break =2 // 非法
+
+	_, err := fmt.Print("Hello\n")
+	if err != nil {
+		// 处理错误
+	}
+
+	Shift()
+}
+
+func Shift() {
+	var i = 192         //      二进制 11000000
+	n1 := int8(i) >> 1  // -32 (二进制 11100000)
+	n2 := uint8(i) >> 1 // 96, (二进制 01100000)
+	fmt.Printf("%b %b", uint8(n1), n2)
+}
+
+func f() io.Reader {
+	return nil
+}
+
+func TypeAssertion() {
+	var x any = 1
+	n := x.(int) // n 的类型将为 int, 值为 1
+
+	var r io.Reader = f()
+	// 如果 r 的动态类型没有实现 io.Writer
+	// 此语句将引发 panic
+	rw := r.(io.Writer)
+
+	var v, ok interface{} = x.(int) // dynamic types of v and ok are T and bool
+
+	_, _, _, _ = n, rw, v, ok
 }
 
 func Precedence() {

@@ -36,16 +36,16 @@ func NewLockFreeSlice(s []int) *LockFreeSlice {
 }
 
 // Value 返回 l 的值
-func (l *LockFreeSlice) Value() []int {
-	return slices.Clone(*l.p.Load())
+func (slice *LockFreeSlice) Value() []int {
+	return slices.Clone(*slice.p.Load())
 }
 
 // Append 类似内建函数 append, 但是可以在并发环境中使用
-func (l *LockFreeSlice) Append(s []int) {
+func (slice *LockFreeSlice) Append(s []int) {
 	for {
-		old := l.p.Load()
+		old := slice.p.Load()
 		new := append((*old)[:len(*old):len(*old)], s...)
-		if l.p.CompareAndSwap(old, &new) {
+		if slice.p.CompareAndSwap(old, &new) {
 			return
 		}
 	}

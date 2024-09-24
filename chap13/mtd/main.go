@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 type T struct {
 	a int
 }
@@ -14,4 +16,49 @@ func main() {
 	(*T).Mp(&t, 1.0) // 相当于 t.Mp(1.0)
 	(*T).Mv(&t, 1)   // 相当于 t.Mv(1)
 	// T.Mp(&t, 1.0)
+}
+
+type I interface {
+	I()
+}
+
+type A int
+
+func (A) I() {}
+
+func (*A) P() {}
+
+type B int
+
+func (*B) I() {}
+func (*B) P() {}
+
+func f() {
+	var a A
+	// A 的方法集中包含 I()
+	var _ I = a
+	// *A 的方法集中也包含 I()
+	var _ I = &a
+
+	var b B
+	// *B 的方法集中包含 I()
+	var _ I = &b
+	// B 的方法集为空
+	// var _ I = b // !! 语法错误 !!
+}
+
+type X struct {
+	v int
+}
+
+func (x *X) Print() {
+	fmt.Println(x.v)
+}
+
+func f2() {
+	var x = &X{v: 1}
+	f := x.Print // 接收者 *X 求值并保存在 f 内
+	f()          // 输出 1
+	x = &X{v: 2} // 修改 x 不影响保存在 f 内的接收者
+	f()          // 输出1
 }
