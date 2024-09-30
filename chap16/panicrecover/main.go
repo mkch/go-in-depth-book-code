@@ -21,7 +21,7 @@ func main() {
 // 如果读取失败, 则返回默认值.
 func SafeConfigValue() (v string) {
 	defer func() {
-		if r := recover(); r != nil { // 1: 如果没有 panic 发生, recover 返回 nil
+		if r := recover(); r != nil { // // 发生了 panic
 			log.Println(v)
 			v = defConfigValue() // 2: 使用默认值
 		}

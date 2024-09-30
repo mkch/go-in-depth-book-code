@@ -42,6 +42,23 @@ func main() {
 
 }
 
+func Temp() {
+
+	// p1 为一个临时变量的地址
+	// 相当于:
+	// var temp int
+	// var p1 = &temp
+	var p1 = new(int)
+
+	// p2 为一个临时变量的地址
+	// 相当于:
+	// var temp = []int{1, 2, 3}
+	// var p2 = &temp
+	var p2 = &[]int{1, 2, 3}
+
+	_, _ = p1, p2
+}
+
 type State uint
 
 const (

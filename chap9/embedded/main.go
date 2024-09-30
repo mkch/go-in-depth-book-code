@@ -29,7 +29,7 @@ type ColorPoint struct {
 // SetColor 设置 p 的颜色为 clr
 // 如果 clr 不为合法的颜色则引发 panic
 func (p *ColorPoint) SetColor(clr string) {
-	// if NotAColorValue(clr) {
+	// if InvalidColor(clr) {
 	// 	panic(fmt.Errorf("SetColor: %v is not a color", clr))
 	// }
 	p.color = clr

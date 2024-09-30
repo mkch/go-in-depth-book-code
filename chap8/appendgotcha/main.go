@@ -6,7 +6,7 @@ import (
 
 func main() {
 	s := []byte("It is OKAY")
-	// 1: is 的内容为 "is"
+	// is 的内容为 "is"
 	is := s[3:5]
 	isEvil := appendEvil(is)
 	// isEvil 的内容为 "is evil"

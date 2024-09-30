@@ -17,7 +17,7 @@ func main() {
 func ParseUserID(s string) (id int, err error) {
 	id, err = strconv.Atoi(s)
 	if err != nil {
-		err = fmt.Errorf("ParseUserID: %w", err)
+		err = fmt.Errorf("parsing user id %v: %w", id, err)
 	}
 	return
 }
@@ -37,7 +37,10 @@ func Wrap2() {
 }
 
 func PathError() {
-	_, err := os.Open("file1")
+	f, err := os.Open("file1")
+	if err != nil {
+		defer f.Close()
+	}
 	if errors.Is(err, fs.ErrPermission) {
 		fmt.Println("permission denied")
 	}

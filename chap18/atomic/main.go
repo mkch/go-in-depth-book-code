@@ -44,7 +44,7 @@ func (slice *LockFreeSlice) Value() []int {
 func (slice *LockFreeSlice) Append(s []int) {
 	for {
 		old := slice.p.Load()
-		new := append((*old)[:len(*old):len(*old)], s...)
+		new := append(slices.Clone(*old), s...)
 		if slice.p.CompareAndSwap(old, &new) {
 			return
 		}

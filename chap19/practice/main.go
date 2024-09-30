@@ -55,7 +55,7 @@ func DecodeQuey(m url.Values, dest any) error {
 	return nil
 }
 
-// DecodeQuey 把 m 解码后放入 dest 所指向的变量中
+// DecodeHeader 把 m 解码后放入 dest 所指向的变量中
 // 类似 json.Unmarshal()
 func DecodeHeader(m http.Header, dest any) error {
 	// 实现代码省略
@@ -66,7 +66,7 @@ func DecodeHeader(m http.Header, dest any) error {
 // 如果 v 是 struct, 校验将根据 v 的 field tag 进行
 // https://github.com/go-playground/validator 就是一个类似的校验库
 func Validate(v any) error {
-	return nil
+	return nil // 实现代码省略
 }
 
 func Decode[T any](w http.ResponseWriter, decode func(T, any) error, arg T, dest any) (ok bool) {
@@ -74,7 +74,7 @@ func Decode[T any](w http.ResponseWriter, decode func(T, any) error, arg T, dest
 	if err = decode(arg, dest); err == nil {
 		err = Validate(dest)
 	}
-	if ok = err == nil; !ok {
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 	}
 	return

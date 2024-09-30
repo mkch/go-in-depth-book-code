@@ -26,10 +26,3 @@ type T struct {
 	F4 func() T
 	F6 struct{ F *T }
 }
-
-type Aligned struct {
-	F1 byte
-	_  [2]byte // padding
-	F2 byte
-	F3 uint32
-}

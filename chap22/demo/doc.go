@@ -67,7 +67,7 @@ var Ops = map[Token]string{
 下面是一个“段落”：
 
 段落第一句话。
-段落第二句号，比较长。段落第三句话。
+段落第二句话，比较长。段落第三句话。
 */
 var ParagraphDemo int
 
@@ -95,7 +95,7 @@ var ParagraphDemo int
 
 	#这个不是标题，因为它有缩进
 */
-var HeadingsDemo int
+var HeadingDemo int
 
 /*
 这是一个链接[链接1]。这是[链接2]。

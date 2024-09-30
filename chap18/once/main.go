@@ -25,10 +25,11 @@ func Instance() *Singleton {
 	return instance
 }
 
+// getInstance 的类型为 func() *Singleton
 var getInstance = sync.OnceValue(func() *Singleton {
 	return new(Singleton) // 此行代码只会执行一次
 })
 
 func Instance2() *Singleton {
-	return getInstance()
+	return getInstance() // getInstance 的类型为 func() *Singleton
 }

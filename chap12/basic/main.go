@@ -54,6 +54,8 @@ func concept() {
 
 	ppp1 := &pp1
 	fmt.Printf("%p %[1]T\n", ppp1)
+
+	var _ int = ***ppp1
 }
 
 type S struct {
@@ -69,8 +71,8 @@ type PS *S
 func implicitIndirection() {
 	var s S
 	p := &s
-	(*p).Field = 0 // 1: 相对于 s.Field = 0
-	(*p).Method()  // 2: 相对于 s.Method()
+	(*p).Field = 0 // 1: 相当于 s.Field = 0
+	(*p).Method()  // 2: 相当于 s.Method()
 
 	p.Field = 0 // 3: 1 的简化写法
 	p.Method()  // 4: 2 的简化写法

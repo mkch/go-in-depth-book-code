@@ -12,7 +12,7 @@ func main() {
 
 type S struct {
 	F1 byte
-	_  [2]byte // 1: padding
+	_  [2]byte // padding
 	F2 byte
 	F3 uint32
 }

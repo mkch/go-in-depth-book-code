@@ -9,8 +9,22 @@ func main() {
 	var calc = NewSumCalc()
 	defer calc.Close()
 
-	fmt.Println(calc.Sum([]int{1, 2, 3, 4, 5}))
-	fmt.Println(calc.Sum([]int{5, 4, 3, 2, 1}))
+	var group sync.WaitGroup
+	group.Add(3)
+	go func() {
+		defer group.Done()
+		fmt.Println(calc.Sum([]int{1, 2, 3, 4, 5}))
+	}()
+	go func() {
+		defer group.Done()
+		fmt.Println(calc.Sum([]int{5, 4, 3, 2, 1}))
+	}()
+	go func() {
+		defer group.Done()
+		fmt.Println(calc.Sum([]int{50, 40, 30, 20, 10}))
+	}()
+
+	group.Wait()
 }
 
 // SumCalc 是一个计算器
@@ -21,10 +35,13 @@ type SumCalc struct {
 
 // NewSumCalc 创建一个新的 SumCalc
 // 使用完毕后必须调用 Close() 方法关闭
-func NewSumCalc() (ret *SumCalc) {
-	ret = &SumCalc{taskChan: make(chan *task)}
-	ret.group.Add(1)
-	go worker(&ret.group, ret.taskChan)
+func NewSumCalc() (calc *SumCalc) {
+	calc = &SumCalc{taskChan: make(chan *task)}
+	const MAX_WORKERS = 3
+	calc.group.Add(MAX_WORKERS)
+	for range MAX_WORKERS {
+		go worker(&calc.group, calc.taskChan)
+	}
 	return
 }
 

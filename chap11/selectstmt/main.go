@@ -90,7 +90,7 @@ func valBackupDefault() {
 	fmt.Println(v)
 }
 
-// readTimeout 从 c 中读取一个值, 如果阻塞时间过长则返回非 nil error.
+// readTimeout 从 c 中读取一个值, 如果阻塞时间过长则返回非 nil error
 func readTimeout(c <-chan int) (int, error) {
 	// timer 控制读取的超时
 	timer := time.NewTimer(time.Millisecond * 20)

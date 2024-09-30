@@ -43,11 +43,13 @@ func If() {
 		_ = n // 使用 n
 	}
 
-	n, err := strconv.Atoi("1")
-	if err != nil {
-		// 处理错误
-	} else {
-		_ = n // 使用 n
+	{
+		n, err := strconv.Atoi("1")
+		if err != nil {
+			// 处理错误
+		} else {
+			_ = n // 使用 n
+		}
 	}
 }
 

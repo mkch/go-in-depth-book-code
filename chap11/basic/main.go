@@ -60,16 +60,16 @@ func basic() {
 	closeSignal2()
 }
 
-// NewIdGenerator 返回一个并发安全的顺序 ID 生成器.
-func NewIdGenerator() func() uint64 {
-	c := make(chan uint64)              // 1
-	producer := func(w chan<- uint64) { // 2
+// NewIdGenerator 返回一个并发安全的顺序 ID 生成器
+func NewIdGenerator() func() (g uint64) {
+	c := make(chan uint64)
+	producer := func(w chan<- uint64) {
 		for i := range uint64(math.MaxUint64) {
 			w <- i
 		}
 		panic("out of Id")
 	}
-	go producer(c) // 3
+	go producer(c)
 	return func() uint64 { return <-c }
 }
 

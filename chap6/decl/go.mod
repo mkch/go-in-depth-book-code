@@ -1,3 +1,3 @@
-module example/main
+module example/test
 
 go 1.23.1

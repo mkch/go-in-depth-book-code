@@ -15,7 +15,7 @@ func (Impl) defaultImpl() {
 	fmt.Println("Must do this")
 }
 
-// Use 使用一个 Iface
+// Use 使用 Iface
 func Use(i Iface) {
 	i.defaultImpl() // 调用默认实现
 	i.F()

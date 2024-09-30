@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	var shapes = []Shape{&Rectangle{1, 2}, &Circle{3}}
+	var shapes = []Shape{Rectangle{1, 2}, Circle{3}}
 	fmt.Println(AvgArea(shapes))
 }
 
@@ -25,7 +25,7 @@ type Rectangle struct {
 }
 
 // Area 计算 r 的面积
-func (r *Rectangle) Area() float32 {
+func (r Rectangle) Area() float32 {
 	return float32(r.Width) * float32(r.Height)
 }
 
@@ -33,7 +33,7 @@ type Circle struct {
 	Radius int
 }
 
-func (c *Circle) Area() float32 {
+func (c Circle) Area() float32 {
 	return math.Pi * float32(c.Radius*c.Radius)
 }
 

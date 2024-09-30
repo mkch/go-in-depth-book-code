@@ -1,4 +1,3 @@
-// chap4/nocomp/main.go
 package main
 
 // NoCompare 类型不可比较

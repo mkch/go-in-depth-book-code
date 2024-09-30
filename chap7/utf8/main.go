@@ -27,7 +27,7 @@ func CopyString2(dest []byte, src string) int {
 
 	// 取出 src 中对应 dest 尾部的字节
 	// 如果该字节第一位是 0, 是单字节字符, 不会截断, 直接 copy
-	if src[len(dest)-1]&0x80 == 0 {
+	if src[len(dest)-1]&0b10000000 == 0 {
 		return copy(dest[:], src)
 	}
 
@@ -38,7 +38,7 @@ func CopyString2(dest []byte, src string) int {
 			// 取出此字符的字节数(即字符首个字节中前导 1 的个数)
 			// bits.LeadingZeros32() 是取前导 0 的个数, 所以要用 ^ 取反
 			// << 24 把此字节移到 uint32 的首部
-			count := bits.LeadingZeros32((uint32)(^src[i]) << 24)
+			count := bits.LeadingZeros32(uint32(^src[i]) << 24)
 			// 如果此字符没有被截断, 直接复制
 			if len(dest)-i == count {
 				return copy(dest[:], src)

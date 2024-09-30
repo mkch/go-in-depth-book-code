@@ -40,7 +40,7 @@ func New[K comparable, V any](hash func(K) uintptr) *HashMap[K, V] {
 }
 
 // bucketIndex 在 m 中寻找 key 对应的桶
-// b 为桶指针. 如果找到 i 为 key 在 b 中的索引, 否则 i 为 -1
+// b 为桶指针. 如果找到, i 为 key 在 b 中的索引, 否则 i 为 -1
 func (m *HashMap[K, V]) bucketIndex(key K) (b *bucket[K, V], i int) {
 	index := m.hashFunc(key) % uintptr(len(m.buckets))
 	b = &m.buckets[index]
