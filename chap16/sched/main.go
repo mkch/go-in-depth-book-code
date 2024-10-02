@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sync"
 	"time"
 )
 
@@ -26,8 +25,8 @@ func NewThread(id int) {
 	// 在此 VM 中, 本地线程即 goroutine
 	go func() {
 		for {
-			t.g = DequeueG() // 从 gq 中取出一个待执行的 G
-			t.pc = t.g.pc    // 使用该 G 的 pc 继续执行
+			t.g = <-gq    // 从 gq 中取出一个待执行的 G
+			t.pc = t.g.pc // 使用该 G 的 pc 继续执行
 			for inst := Code[t.pc]; inst != nil; inst = Code[t.pc] {
 				t.pc++  // 指向下一条指令
 				inst(t) // 执行当前指令
@@ -45,49 +44,28 @@ type G struct {
 }
 
 // gq 为等待执行的 G 队列.
-var gq []*G
-
-// gqCond 为 gq 用到的条件变量.
-var gqCond = sync.Cond{L: &sync.Mutex{}}
+var gq = make(chan *G, 1024)
 
 // NewG 创建一个并发单元.
 func NewG(pc int) {
-	g := &G{pc: pc}
-	gqCond.L.Lock()
-	defer gqCond.L.Unlock()
-	gq = append(gq, g)
-	gqCond.Signal()
-}
-
-// DequeueG 从 gq 队列中取出一个 G,
-// 如果当前队列为空, 则阻塞等待直到有 G 加入 gq 为止.
-func DequeueG() (g *G) {
-	gqCond.L.Lock()
-	defer gqCond.L.Unlock()
-	for len(gq) == 0 {
-		gqCond.Wait()
-	}
-	g = gq[0]
-	gq = gq[1:]
-	return
+	gq <- &G{pc: pc}
 }
 
 // Schedule 为调度指令, 此指令执行一次 G 调度.
 // 本函数返回后, m 所关联的 G 会让出执行时间, 使得 gq 中的 G 有机会执行.
 func Schedule(t *Thread) {
-	gqCond.L.Lock()
-	defer gqCond.L.Unlock()
-	if len(gq) > 0 {
+	select {
+	case g := <-gq:
 		out := t.g    // out 为被调度出去的 G
 		out.pc = t.pc // 记录 out 的 pc 寄存器
 		// 准备运行新 G
-		t.g = gq[0]
+		t.g = g
 		t.pc = t.g.pc // 把新 G 的 pc 作为当前 pc 寄存器
 		// 把 out 加入等待队列
-		gq = append(gq[1:], out)
-		gqCond.Signal()
+		gq <- out
+	default:
+		// 没有待执行的 G
 	}
-	return
 }
 
 // Code 为 VM 的代码段.
