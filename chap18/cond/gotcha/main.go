@@ -1,26 +1,21 @@
-package gotcha
+package main
 
 import (
+	"fmt"
 	"sync"
-	"testing"
+	"time"
 )
 
-func TestF(t *testing.T) {
+func main() {
 	cond := sync.NewCond(&sync.Mutex{})
 	var value int
 
 	change := func(n int) {
 		cond.L.Lock()
+		defer cond.L.Unlock()
 		value = n
 		cond.Signal()
-		cond.L.Unlock()
 	}
-
-	go func() {
-		for n := 1; ; n++ {
-			change(n)
-		}
-	}()
 
 	listen := func(old int) int {
 		cond.L.Lock()
@@ -31,11 +26,18 @@ func TestF(t *testing.T) {
 		return value
 	}
 
-	for {
+	go func() {
 		var old int
-		new := listen(old)
-		if new-old != 1 {
-			t.Fatalf("new=%v old=%v", new, old)
+		for range 10 {
+			new := listen(old)
+			fmt.Println(new)
+			old = new
 		}
+	}()
+
+	for n := range 10 {
+		change(n + 1)
 	}
+
+	time.Sleep(time.Second * 2)
 }
