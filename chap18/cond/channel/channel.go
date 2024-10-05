@@ -9,9 +9,9 @@ type Channel[T any] struct {
 	buf          []T       // 缓冲区
 	cap          int       // 容量
 	closed       bool      // 是否已关闭
-	readBlocking bool      // 是否有阻塞的读, 在 cap == 0 时 canSend 用到
+	readBlocking bool      // 是否有阻塞的读, 在canSend 中用到(cap == 0)
 
-	// 如果一个 Select 需要等待此 Channel, 会向此切片中添加一个 signalSelect.
+	// 如果一个 Select 需要等待此 Channel, 会向此切片中添加一个元素.
 	// 当条件改变时, 会调用 signalSelect 通知 Select.
 	signalSelect []*signalSelect
 }
@@ -24,6 +24,20 @@ func Make[T any](capacity int) *Channel[T] {
 	c := &Channel[T]{cap: capacity}
 	c.cond.L = &sync.Mutex{}
 	return c
+}
+
+// locked 为一个已上锁的 *sync.Mutext.
+// 参看下方包 init 函数.
+var locked sync.Mutex
+
+func init() {
+	locked.Lock()
+}
+
+// blockForever 永远阻塞
+// 用于实现读写 nil Channel 时的行为.
+func blockForever() {
+	locked.Lock()
 }
 
 // Close 关闭 c. 相当于 close(c).
@@ -40,22 +54,8 @@ func (c *Channel[T]) Close() {
 	}
 	c.closed = true
 	c.cond.Broadcast()
-
 	// 通知正在等待读的 Select
 	c.callSignalSelect()
-}
-
-// locked 为一个已上锁的 *sync.Mutext
-var locked sync.Mutex
-
-func init() {
-	locked.Lock()
-}
-
-// blockForever 永远阻塞
-// 用于实现读写 nil Channel 时的行为.
-func blockForever() {
-	locked.Lock()
 }
 
 // Send 向 c 中写入一个值 v
@@ -68,14 +68,6 @@ func (c *Channel[T]) Send(v T) {
 	c.cond.L.Lock()
 	defer c.cond.L.Unlock()
 	c.send(v)
-}
-
-// callSignalSelect 调用 signalSelect,
-// 必须持有锁.
-func (c *Channel[T]) callSignalSelect() {
-	for _, n := range c.signalSelect {
-		n.f()
-	}
 }
 
 // send 向 c 中写入 v. 调用时必须持有 c.cond.L.
@@ -157,7 +149,7 @@ func (c *Channel[T]) recv(ok *bool) (v T) {
 }
 
 // canRead 返回 c 当前是否可不阻塞地执行一个 Send().
-// 调用时必须持有 c.L.
+// 调用时必须持有 c.cond.L
 func (c *Channel[T]) canSend() bool {
 	return c != nil && // nil Channel 永远阻塞
 		(c.closed || // 已关闭也可以不阻塞地发送(panic)
@@ -166,7 +158,15 @@ func (c *Channel[T]) canSend() bool {
 }
 
 // canRead 返回 c 当前是否可不阻塞地执行一个 Recv().
-// 调用时必须持有 c.L.
+// 调用时必须持有 c.cond.L
 func (c *Channel[T]) canRecv() bool {
 	return c != nil && (c.closed || len(c.buf) > 0)
+}
+
+// callSignalSelect 调用 signalSelect,
+// 调用时必须持有 c.cond.L
+func (c *Channel[T]) callSignalSelect() {
+	for _, n := range c.signalSelect {
+		n.f()
+	}
 }

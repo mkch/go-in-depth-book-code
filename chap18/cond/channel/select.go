@@ -38,7 +38,9 @@ type signalSelect struct {
 //	}
 //
 // 如果任何分支缺失, 则无对应 case.
-func Select[T any](recvBranches []*Recv[T], sendBranches []*Send[T], defaultBranch Default) {
+func Select[T any](recvBranches []*Recv[T],
+	sendBranches []*Send[T],
+	defaultBranch Default) {
 	// 持有所有分支的锁
 	var lock = func() {
 		for _, r := range recvBranches {
@@ -66,38 +68,83 @@ func Select[T any](recvBranches []*Recv[T], sendBranches []*Send[T], defaultBran
 		}
 	}
 
-	// 为所有分支添加 signalSelect. 调用时必须持有所有锁.
-	var appendSignal = func(n *signalSelect) {
+	// 为所有分支添加 signalSelect. 调用时必须持有所有分支的锁.
+	var appendSignal = func(signal *signalSelect) {
 		for _, r := range recvBranches {
 			if r.Chan != nil {
-				r.Chan.signalSelect = append(r.Chan.signalSelect, n)
+				r.Chan.signalSelect = append(r.Chan.signalSelect,
+					signal)
 			}
 		}
 		for _, w := range sendBranches {
 			if w.Chan != nil {
-				w.Chan.signalSelect = append(w.Chan.signalSelect, n)
+				w.Chan.signalSelect = append(w.Chan.signalSelect,
+					signal)
 			}
 		}
 	}
-	// 为所有分支删除 signalSelect. 调用时必须持有所有锁.
+	// 为所有分支删除 signalSelect. 调用时必须持有所有分支的锁.
 	var removeSignal = func(n *signalSelect) {
 		for _, r := range recvBranches {
 			if r.Chan != nil {
-				r.Chan.signalSelect = slices.DeleteFunc(r.Chan.signalSelect, func(a *signalSelect) bool { return a == n })
+				r.Chan.signalSelect = slices.DeleteFunc(
+					r.Chan.signalSelect,
+					func(a *signalSelect) bool { return a == n })
 			}
 		}
 		for _, w := range sendBranches {
 			if w.Chan != nil {
-				w.Chan.signalSelect = slices.DeleteFunc(w.Chan.signalSelect, func(a *signalSelect) bool { return a == n })
+				w.Chan.signalSelect = slices.DeleteFunc(
+					w.Chan.signalSelect,
+					func(a *signalSelect) bool { return a == n })
 			}
 		}
 	}
 
-	// 阻塞等待, 直到运行了一个不阻塞的分支
+	// execRandomNb 从 recvCases 和 sendCases 中
+	// 随机选择一个不会阻塞的分支并执行.
+	// 如果成功执行了一个分支, 返回 true, 否则返回 false.
+	// 调用时必须持有所有分支的锁.
+	// 如果有分支可执行, 则先执行 callback, 然后执行分支操作,
+	// 并在调用分支的F()前调用 unlock().
+	var execRandomNb = func(recvBranches []*Recv[T],
+		sendBranches []*Send[T],
+		callback func()) (exec bool) {
+		recvBranches = slices.DeleteFunc(slices.Clone(recvBranches),
+			func(a *Recv[T]) bool {
+				return a.Chan == nil || !a.Chan.canRecv()
+			})
+		sendBranches = slices.DeleteFunc(slices.Clone(sendBranches),
+			func(a *Send[T]) bool {
+				return a.Chan == nil || !a.Chan.canSend()
+			})
+		n := len(recvBranches) + len(sendBranches)
+		if n == 0 {
+			return false
+		}
+		i := rand.IntN(n)
+		if i < len(recvBranches) {
+			callback()
+			var ok bool
+			b := recvBranches[i]
+			v := b.Chan.recv(&ok)
+			unlock()
+			b.F(v, ok)
+		} else {
+			callback()
+			b := sendBranches[i-len(recvBranches)]
+			b.Chan.send(b.Value)
+			unlock()
+			b.F()
+		}
+		return true
+	}
+
+	// 阻塞等待, 直到运行了一个不阻塞的分支.
+	// 调用时必须持有所有分支的锁.
 	var wait = func() {
-		// caseReadyCond 保护 caseReady 的 Cond
 		var caseReadyCond = sync.NewCond(&sync.Mutex{})
-		var caseReady bool // 是否有分支解除阻塞
+		var caseReady bool // 是否有分支发生变化
 		var signal = signalSelect{
 			func() {
 				caseReadyCond.L.Lock()
@@ -119,67 +166,29 @@ func Select[T any](recvBranches []*Recv[T], sendBranches []*Send[T], defaultBran
 			caseReadyCond.L.Unlock()
 
 			lock()
-			r, w := randSelect(recvBranches, sendBranches)
-			if r != nil {
-				removeSignal(&signal)
-				var ok bool
-				v := r.Chan.recv(&ok)
-				unlock()
-				r.F(v, ok)
-				return
-			} else if w != nil {
-				removeSignal(&signal)
-				w.Chan.send(w.Value)
-				unlock()
-				w.F()
+			// 执行一个不阻塞的分支
+			if execRandomNb(recvBranches, sendBranches,
+				func() { removeSignal(&signal) }) {
 				return
 			}
 			unlock()
+			// 如果没有执行成功(和其他并发竞争识别)则继续等待
 		}
 	}
 
 	lock()
 
-	// 找出不阻塞的分支
-	r, w := randSelect(recvBranches, sendBranches)
-	if r != nil {
-		var ok bool
-		v := r.Chan.recv(&ok)
-		unlock()
-		r.F(v, ok)
-	} else if w != nil {
-		w.Chan.send(w.Value)
-		unlock()
-		w.F()
-	} else {
-		// 所有分支阻塞
-		if defaultBranch != nil {
-			// 有 Default, 执行 Default 分支
-			unlock()
-			defaultBranch()
-			return
-		}
-		// 阻塞等待
-		wait()
-	}
-}
-
-// randSelect 从 recvCases 和 sendCases 中随机选择一个不会阻塞的分支.
-// 调用时必须持有所有分支的锁.
-func randSelect[T any](recvBranches []*Recv[T], sendBranches []*Send[T]) (r *Recv[T], w *Send[T]) {
-	recvBranches = slices.DeleteFunc(slices.Clone(recvBranches),
-		func(a *Recv[T]) bool { return a.Chan == nil || !a.Chan.canRecv() })
-	sendBranches = slices.DeleteFunc(slices.Clone(sendBranches),
-		func(a *Send[T]) bool { return a.Chan == nil || !a.Chan.canSend() })
-	n := len(recvBranches) + len(sendBranches)
-	if n == 0 {
+	// 执行一个不阻塞的分支
+	if execRandomNb(recvBranches, sendBranches, func() {}) {
 		return
 	}
-	i := rand.IntN(n)
-	if i < len(recvBranches) {
-		r = recvBranches[i]
-	} else {
-		w = sendBranches[i-len(recvBranches)]
+	// 所有分支阻塞
+	if defaultBranch != nil {
+		// 有 Default, 执行 Default 分支
+		unlock()
+		defaultBranch()
+		return
 	}
-	return
+	// 阻塞等待
+	wait()
 }

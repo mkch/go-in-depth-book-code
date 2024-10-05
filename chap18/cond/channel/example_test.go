@@ -22,8 +22,10 @@ func ExampleSelect() {
 	c2 := channel.Make[string](1)
 
 	channel.Select(
-		[]*channel.Recv[string]{{Chan: c1, F: func(v string, ok bool) { fmt.Println("Recv selected") }}},
-		[]*channel.Send[string]{{Chan: c2, F: func() { fmt.Println("Send selected") }}},
+		[]*channel.Recv[string]{{Chan: c1,
+			F: func(v string, ok bool) { fmt.Println("Recv selected") }}},
+		[]*channel.Send[string]{{Chan: c2,
+			F: func() { fmt.Println("Send selected") }}},
 		nil,
 	)
 

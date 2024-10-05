@@ -1,6 +1,7 @@
 package channel
 
 import (
+	"slices"
 	"testing"
 	"time"
 )
@@ -178,4 +179,63 @@ func TestRandBranch(t *testing.T) {
 	if len(result) < 2 {
 		t.Fatal("not random")
 	}
+}
+
+func TestConcurrentSelect(t *testing.T) {
+	var test = func(t *testing.T, n int) {
+		c := Make[int](n)
+		const COUNT = 20
+		go func() {
+			for i := range COUNT {
+				//t.Logf("Send %v", i)
+				c.Send(i)
+			}
+		}()
+
+		var result = make(chan int, COUNT)
+		var exec [2]bool
+
+		read := func(id int) {
+			for {
+				var done bool
+				Select(
+					[]*Recv[int]{{Chan: c, F: func(v int, ok bool) {
+						done = ok
+						t.Logf("recv#%v: %v, %v\n", id, v, ok)
+						exec[id] = true
+						result <- v
+					}}},
+					nil,
+					nil,
+				)
+				if !done {
+					break
+				}
+			}
+		}
+
+		go read(0)
+		go read(1)
+
+		var recv []int
+		for range COUNT {
+			recv = append(recv, <-result)
+		}
+		if !exec[0] || !exec[1] {
+			t.Fatal("Should be random")
+		}
+		if len(recv) != COUNT {
+			t.Fatal(len(recv))
+		}
+		slices.Sort(recv)
+		for i, v := range recv {
+			if i != v {
+				t.Fatal(recv)
+			}
+		}
+	}
+
+	t.Run("Buffered", func(t *testing.T) { test(t, 5) })
+	t.Run("NoBuffer", func(t *testing.T) { test(t, 0) })
+
 }
