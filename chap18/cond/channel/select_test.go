@@ -1,6 +1,7 @@
 package channel
 
 import (
+	"context"
 	"slices"
 	"testing"
 	"time"
@@ -237,5 +238,20 @@ func TestConcurrentSelect(t *testing.T) {
 
 	t.Run("Buffered", func(t *testing.T) { test(t, 5) })
 	t.Run("NoBuffer", func(t *testing.T) { test(t, 0) })
+}
 
+func TestNoBranch(t *testing.T) {
+	done := make(chan struct{})
+	go func() {
+		Select[int](nil, nil, nil)
+		close(done)
+	}()
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*100)
+	defer cancel()
+	select {
+	case <-done:
+		t.Fatal("should block")
+	case <-ctx.Done():
+	}
 }
