@@ -1,0 +1,63 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Send file</title>
+</head>
+
+<body>
+
+    <input style="display: none;" type="file" multiple id="file_upload">
+    <div style="text-align: center; width:fit-content; margin-top: 10pt; margin-left: auto; margin-right: auto;">
+        <button id="choose_file_button" type="button" onclick="start()">Choose file</button>
+    </div>
+
+    <script>
+        async function sendFile(file, code) {
+            try {
+                const response = await fetch(
+                    `/send_file/${encodeURIComponent(code)}` +
+                    `?name=${encodeURIComponent(file.name)}` +
+                    `&size=${encodeURIComponent(file.size)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/octet-stream' },
+                    body: file
+                })
+                if (response.ok) {
+                    alert("Done!");
+                } else {
+                    alert(`Upload failed: ${await response.text()}`);
+                }
+            } catch (error) {
+                alert("Upload failed.");
+            }
+        }
+
+        function start() {
+            const code = new URL(location).searchParams.get("code")
+            if (!code) {
+                alert("Code param is required")
+                return
+            }
+            const fileUpload = document.querySelector("#file_upload");
+            fileUpload.value = "";
+            fileUpload.accept = "";
+            fileUpload.onchange = async () => {
+                if (fileUpload.files.length > 0) {
+                    const button = document.querySelector("#choose_file_button");
+                    button.disabled = true;
+                    await sendFile(fileUpload.files[0], code);
+                    button.disabled = false;
+                }
+                // Reset fileUpload
+                fileUpload.value = "";
+                fileUpload.onchange = undefined;
+            };
+            fileUpload.dispatchEvent(new MouseEvent("click"));
+        }
+    </script>
+
+</body>
