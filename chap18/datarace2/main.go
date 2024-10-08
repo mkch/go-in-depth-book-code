@@ -3,25 +3,27 @@ package main
 import (
 	"fmt"
 	"math"
-	"sync"
+	"strconv"
 )
 
-func F1() {
-	var total int
-	var group sync.WaitGroup
-	group.Add(1)
+func F2_Fixed() {
+	var c = make(chan string)
 
 	go func() {
-		total += 1
-		group.Done()
+		c <- "1"
 	}()
 
-	total -= 1
+	strconv.Atoi(<-c)
+}
 
-	group.Wait()
-	if total != 0 {
-		panic(total)
-	}
+func F2() {
+	var str string
+
+	go func() {
+		str = "1"
+	}()
+
+	strconv.Atoi(str)
 }
 
 func main() {
@@ -30,6 +32,6 @@ func main() {
 		fmt.Printf("loop count: %v\n", i+1)
 	}()
 	for i = range math.MaxInt {
-		F1()
+		F2()
 	}
 }
