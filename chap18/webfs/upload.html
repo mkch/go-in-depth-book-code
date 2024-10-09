@@ -11,15 +11,17 @@
 <body>
 
     <input style="display: none;" type="file" multiple id="file_upload">
-    <div style="text-align: center; width:fit-content; margin-top: 10pt; margin-left: auto; margin-right: auto;">
-        <button id="choose_file_button" type="button" onclick="start()">Choose file</button>
+    <div style="text-align: center; width:fit-content; 
+        margin-top: 10pt; margin-left: auto; margin-right: auto;">
+        <button id="choose_file_button" type="button" 
+            onclick="start()">Choose file</button>
     </div>
 
     <script>
-        async function sendFile(file, code) {
+        async function sendFile(file) {
             try {
                 const response = await fetch(
-                    `/send_file/${encodeURIComponent(code)}` +
+                    `/send_file` +
                     `?name=${encodeURIComponent(file.name)}` +
                     `&size=${encodeURIComponent(file.size)}`, {
                     method: 'POST',
@@ -37,19 +39,15 @@
         }
 
         function start() {
-            const code = new URL(location).searchParams.get("code")
-            if (!code) {
-                alert("Code param is required")
-                return
-            }
             const fileUpload = document.querySelector("#file_upload");
             fileUpload.value = "";
             fileUpload.accept = "";
             fileUpload.onchange = async () => {
                 if (fileUpload.files.length > 0) {
-                    const button = document.querySelector("#choose_file_button");
+                    const button = 
+                        document.querySelector("#choose_file_button");
                     button.disabled = true;
-                    await sendFile(fileUpload.files[0], code);
+                    await sendFile(fileUpload.files[0]);
                     button.disabled = false;
                 }
                 // Reset fileUpload
