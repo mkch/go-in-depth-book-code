@@ -45,7 +45,7 @@ func F1() {
 		total -= 1
 	}
 
-	// !! 错误地等待 !!
+	// busy loop, 仅用作演示, 不推荐
 	for total != 0 {
 	}
 }
