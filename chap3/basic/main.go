@@ -40,6 +40,8 @@ func main() {
 	RawString()
 	InterpretedString()
 
+	ShortDecl()
+
 }
 
 func Temp() {
@@ -85,4 +87,16 @@ func InterpretedString() {
 	str5 := "\xE4\xB8\xAD\xE6\x96\x87" // 16 进制 UTF-8 字节序列
 	str6 := "\344\270\255\346\226\207" // 8 进制 UTF-8 字节序列
 	fmt.Println(str, str2, str3, str4, str5, str6)
+}
+
+func ShortDecl() {
+	var a = 1
+	if true {
+		// 声明了两个新变量 a, b
+		// 其中 a 遮蔽了外层声明的 a
+		a, b := 10, 2
+		fmt.Println(a)
+		_ = b
+	}
+	fmt.Println(a)
 }
