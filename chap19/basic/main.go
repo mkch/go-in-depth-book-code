@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"maps"
 	"net/http"
 	"net/url"
@@ -76,6 +77,28 @@ func main() {
 	var pt = Point{1, 2, 3}
 	pt2 := Scale(pt, 2)
 	fmt.Println(pt2.String())
+}
+
+// DiscardG 完全可以用 下列 Discard 代替
+// 用基本接口做类型参数没有太大的实际意义
+func DiscardG[T io.Reader](r T) error {
+	_, err := io.Copy(io.Discard, r)
+	return err
+}
+
+func Discard(r io.Reader) error {
+	_, err := io.Copy(io.Discard, r)
+	return err
+}
+
+func F[T comparable](a T) {
+	_ = a == a
+}
+
+func UseF() {
+	// any 可满足 comparable
+	F(any(0))
+	F(any(struct{ F map[int]int }{}))
 }
 
 func UseSlicesSort() {
