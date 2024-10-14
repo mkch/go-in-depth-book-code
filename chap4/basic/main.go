@@ -8,11 +8,18 @@ import (
 )
 
 func main() {
+	Composite()
 	If()
 	For()
 	Switch()
 	LabelFor()
 	MethodExp()
+}
+func Composite() {
+	a1 := [3]int{0, 10, 0}
+	a2 := [3]int{1: 10}
+	a3 := [...]int{1: 10, 2: 0}
+	fmt.Println(a1, a2, a3)
 }
 
 func MethodExp() {
@@ -71,7 +78,7 @@ func For() {
 func F() string { return "" }
 
 func Switch() {
-	str := F()
+	var str string = F()
 	switch str {
 	case "a":
 		// 处理 str == "a" 的情况
