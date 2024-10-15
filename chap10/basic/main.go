@@ -26,25 +26,25 @@ func makeMap() {
 
 // basicOp 演示 map 基本操作
 func basicOp() {
-	// 1
+	// 初始化
 	var colors = map[string]int{
 		"Red":   0xFF0000,
 		"Green": 0x00FF00,
 		"Blue":  0x0000FF,
 	}
 	l := len(colors) // l 的值为 3
-	// 2: 读取
+	// 读取
 	red := colors["Red"]         // read 的值为 0xFF0000
 	brown, ok := colors["Brown"] // brown 的值为 0, ok 的值为 false
-	// 3: 写入(覆盖)
+	// 写入(覆盖)
 	colors["Blue"] = 255
-	// 4: 添加
+	// 添加
 	colors["Gray"] = 0x808080
 	l = len(colors) // l 的值为 4
-	// 5: 删除
+	// 删除
 	delete(colors, "Gray")
 	l = len(colors) // l 的值为 3
-	// 6: 清空
+	// 清空
 	clear(colors)
 	l = len(colors) // l 的值为 0
 
