@@ -13,7 +13,7 @@ func main() {
 	PathError()
 }
 
-// ParseUserID 解析一个用户ID s, 如果解析失败 err 将为非 nil
+// ParseUserID 解析一个用户ID, 如果解析失败 err 将为非 nil
 func ParseUserID(s string) (id int, err error) {
 	id, err = strconv.Atoi(s)
 	if err != nil {
