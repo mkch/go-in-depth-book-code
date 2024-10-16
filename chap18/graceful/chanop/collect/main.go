@@ -35,7 +35,7 @@ func startWorker(ctx context.Context, id int) {
 		defer group.Done()
 		select {
 		case <-ctx.Done():
-			// done 已完成
+			// ctx 已完成
 		case results <- doWork(id):
 		}
 		// 执行善后
