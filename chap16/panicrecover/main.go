@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -22,7 +21,6 @@ func main() {
 func SafeConfigValue() (v string) {
 	defer func() {
 		if r := recover(); r != nil { // // 发生了 panic
-			log.Println(v)
 			v = defConfigValue() // 2: 使用默认值
 		}
 	}()
