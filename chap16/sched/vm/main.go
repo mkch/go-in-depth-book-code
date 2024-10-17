@@ -9,7 +9,7 @@ import (
 //
 // 此 VM 为一个无栈 VM, 其中函数无参数也无返回值.
 // 一个函数被编译为若干条指令加一个 nil.
-// 因为没有栈, 所以函数调用只能出现在最顶层 [NewG] 中.
+// 因为没有栈, 所以函数调用只能出现在最顶层 [NewThread] 中.
 type Instruction func(*Thread)
 
 var Code []Instruction
@@ -40,29 +40,27 @@ func main() {
 	Code = []Instruction{
 		// 第一个函数 func1
 		// 相当于如下等效 go 函数, 其中 tid 为本地线程 ID
-		// func func1() {
-		// 	fmt.Printf("Thread#%d func1 A\n", tid)
-		// 	fmt.Printf("Thread#%d func1 B\n", tid)
-		// 	fmt.Printf("Thread#%d func1 C\n", tid)
+		// func() {
+		// 	fmt.Printf("T#%v Prepare1\n", t.id)
+		// 	fmt.Printf("T#%v Cook1\n", t.id)
+		// 	fmt.Printf("T#%v ServeDish1\n", t.id)
 		// }
-		/*0*/ func(t *Thread) { fmt.Printf("Thread#%d func1 A\n", t.id) },
-		/*1*/ func(t *Thread) { fmt.Printf("Thread#%d func1 B\n", t.id) },
-		/*2*/ func(t *Thread) { fmt.Printf("Thread#%d func1 C\n", t.id) },
+		/*0*/ func(t *Thread) { fmt.Printf("T#%v Prepare1\n", t.id) },
+		/*1*/ func(t *Thread) { fmt.Printf("T#%v Cook1\n", t.id) },
+		/*2*/ func(t *Thread) { fmt.Printf("T#%v ServeDish1\n", t.id) },
 		/*3*/ nil,
 
 		// 第二个函数 func2
 		// 相当于如下等效 go 函数, 其中 tid 为本地线程 ID
 		// func func2() {
-		// 	fmt.Printf("Thread#%d func2 D\n", tid)
-		// 	fmt.Printf("Thread#%d func2 E\n", tid)
-		// 	fmt.Printf("Thread#%d func2 F\n", tid)
-		// 	fmt.Printf("Thread#%d func2 G\n", tid)
+		// 	fmt.Printf("T#%v Prepare2\n", t.id)
+		// 	fmt.Printf("T#%v Cook2\n", t.id)
+		// 	fmt.Printf("T#%v ServeDish2\n", t.id)
 		// }
-		/*4*/ func(t *Thread) { fmt.Printf("Thread#%d func2 D\n", t.id) },
-		/*5*/ func(t *Thread) { fmt.Printf("Thread#%d func2 E\n", t.id) },
-		/*6*/ func(t *Thread) { fmt.Printf("Thread#%d func2 F\n", t.id) },
-		/*7*/ func(t *Thread) { fmt.Printf("Thread#%d func2 G\n", t.id) },
-		/*8*/ nil,
+		/*4*/ func(t *Thread) { fmt.Printf("T#%v Prepare2\n", t.id) },
+		/*5*/ func(t *Thread) { fmt.Printf("T#%v Cook2\n", t.id) },
+		/*6*/ func(t *Thread) { fmt.Printf("T#%v ServeDish2\n", t.id) },
+		/*7*/ nil,
 	}
 
 	// 使用函数 func1 (地址为 0) 启动一个线程

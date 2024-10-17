@@ -74,37 +74,36 @@ var Code []Instruction
 func main() {
 	Code = []Instruction{
 		// 第一个函数 func1
-		/*0*/ func(t *Thread) { fmt.Printf("Thread#%d func1 A\n", t.id) },
+		/*0*/ func(t *Thread) { fmt.Printf("T#%v Prepare1\n", t.id) },
 		/*1*/ Schedule, // 编译器自动添加的调度指令
-		/*2*/ func(t *Thread) { fmt.Printf("Thread#%d func1 B\n", t.id) },
-		/*3*/ func(t *Thread) { fmt.Printf("Thread#%d func1 C\n", t.id) },
-		/*4*/ nil,
+		/*2*/ func(t *Thread) { fmt.Printf("T#%v Cook1\n", t.id) },
+		/*3*/ Schedule, // 编译器自动添加的调度指令
+		/*4*/ func(t *Thread) { fmt.Printf("T#%v ServeDish1\n", t.id) },
+		/*5*/ nil,
 		// 第二个函数 func2
-		/*5*/ func(t *Thread) { fmt.Printf("Thread#%d func2 D\n", t.id) },
-		/*6*/ func(t *Thread) { fmt.Printf("Thread#%d func2 E\n", t.id) },
-		/*7*/ func(t *Thread) { fmt.Printf("Thread#%d func2 F\n", t.id) },
-		/*8*/ Schedule, // 编译器自动添加的调度指令
-		/*9*/ func(t *Thread) { fmt.Printf("Thread#%d func2 G\n", t.id) },
-		/*10*/ nil,
+		/*6*/ func(t *Thread) { fmt.Printf("T#%v Prepare2\n", t.id) },
+		/*7*/ Schedule, // 编译器自动添加的调度指令
+		/*8*/ func(t *Thread) { fmt.Printf("T#%v Cook2\n", t.id) },
+		/*9*/ func(t *Thread) { fmt.Printf("T#%v ServeDish2\n", t.id) },
+		/*10*/ Schedule, // 编译器自动添加的调度指令
+		/*11*/ nil,
 		// 第三个函数 func3
-		/*11*/ func(t *Thread) { fmt.Printf("Thread#%d func3 H\n", t.id) },
-		/*12*/ Schedule, // 编译器自动添加的调度指令
-		/*13*/ func(t *Thread) { fmt.Printf("Thread#%d func3 I\n", t.id) },
-		/*14*/ nil,
+		/*12*/ func(t *Thread) { fmt.Printf("T#%v Prepare3\n", t.id) },
+		/*13*/ Schedule, // 编译器自动添加的调度指令
+		/*14*/ func(t *Thread) { fmt.Printf("T#%v Cook3\n", t.id) },
+		/*15*/ func(t *Thread) { fmt.Printf("T#%v ServeDish3\n", t.id) },
+		/*16*/ nil,
 	}
 
 	NewThread(1)
 	NewThread(2)
 
-	// NewG(0) 代表使用函数 func1 (地址为 0) 启动一个 G
-	// 此函数包含 5 条指令 (包括结尾的nil)
+	// 使用函数 func1 (地址为 0) 启动一个 G
 	NewG(0)
-	// NewG(5) 代表使用函数 func2 (地址为 5), 启动一个 G
-	// 此函数包含 6 条指令 (包括结尾的nil)
-	NewG(5)
-	// NewG(11) 代表使用函数 func3 (地址为 11), 启动一个 G
-	// 此函数包含 3 条指令 (包括结尾的nil)
-	NewG(11)
+	// 使用函数 func2 (地址为 6), 启动一个 G
+	NewG(6)
+	// 使用函数 func3 (地址为 12), 启动一个 G
+	NewG(12)
 
 	time.Sleep(time.Second * 1)
 }
