@@ -45,8 +45,8 @@ func Test2(t *testing.T) {
 }
 
 func Benchmark1(b *testing.B) {
-	b.RunParallel(func(p *testing.PB) {
-		for p.Next() {
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
 			time.Sleep(time.Nanosecond * 50000)
 		}
 	})

@@ -15,11 +15,11 @@ func TestHandleConcat(t *testing.T) {
 	// 调用被测函数
 	handleConcat(w, r)
 	response := w.Result()
-	// 测试状态码
+	// 验证状态码
 	if response.StatusCode != 200 {
 		t.Fatalf("wrong status: %v, want %v", response.StatusCode, 200)
 	}
-	// 测试回应数据
+	// 验证回应数据
 	if data, err := io.ReadAll(response.Body); err != nil {
 		t.Fatal(err)
 	} else if str := string(data); str != "abcdef" {
