@@ -1,36 +1,41 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func main() {
-	var number Number = new(SomeNumber)
-	number.Print() // 这里会 panic, 而不是显示"100".
+	var creator = new(ContreteCreator)
+	creator.AnOperation() // 这里会 panic, 而不是显示 "Product".
 }
 
-type Number interface {
-	Value() int
-	Print()
+type Product interface {
+	Product()
 }
 
-type NumberBase struct {
+type Creator struct {
 }
 
-func (n *NumberBase) Value() int {
+func (c *Creator) FactoryMethod() Product {
 	panic("需要子类覆盖") // !! 错误: "子类" 无法覆盖 !!
 }
 
-func (b *NumberBase) Print() {
-	value := b.Value() // !! 错误: 此处永远调用 (*NumberBase).Value() !!
-	fmt.Println(value)
+func (c *Creator) AnOperation() {
+	// !! 错误: 此处永远调用 (*BaseCreator).FactoryMethod() !!
+	product := c.FactoryMethod()
+	product.Product()
 }
 
-type SomeNumber struct {
-	NumberBase
+type ContreteCreator struct {
+	Creator // !! 嵌入不具有多态性 !!
 }
 
-// !! 错误: 试图覆盖 NumberBase.Value() !!
-func (n *SomeNumber) Value() int {
-	return 100
+// !! 错误: 试图覆盖 (*BaseCreator).FactoryMethod() !!
+func (c *ContreteCreator) FactoryMethod() Product {
+	return new(ContreteProduct)
+}
+
+// ContreteProduct 实现了 Product
+type ContreteProduct struct{}
+
+func (*ContreteProduct) Product() {
+	fmt.Println("Product")
 }
