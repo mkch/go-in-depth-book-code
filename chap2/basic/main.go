@@ -20,13 +20,35 @@ func main() {
 	}
 
 	Shift()
+	BinaryBitwise()
+	UnaryBitwise()
 }
 
 func Shift() {
 	var i = 192         //      二进制 11000000
 	n1 := int8(i) >> 1  // -32 (二进制 11100000)
 	n2 := uint8(i) >> 1 // 96, (二进制 01100000)
-	fmt.Printf("%b %b", uint8(n1), n2)
+	fmt.Printf("%b %b\n", uint8(n1), n2)
+}
+
+func BinaryBitwise() {
+	var a int8 = 10 //     二进制 1010
+	var b int8 = 12 //     二进制 1100
+	and := a & b    // 8  (二进制 1000)
+	or := a | b     // 14 (二进制 1110)
+	xor := a ^ b    // 6  (二进制 0110)
+
+	fmt.Printf("%v: %[1]b  %v: %[2]b  %v: %[3]b\n", and, or, xor)
+}
+
+func UnaryBitwise() {
+	var a uint8 = 10 //       二进制 00001010
+	ca := ^a         // 245  (二进制 11110101)
+
+	var b int8 = -10 //       二进制 11110110
+	cb := ^b         // 9    (二进制 00001001)
+
+	fmt.Printf("%v: %[1]b %v: %[1]b\n", ca, cb)
 }
 
 func f() io.Reader {
