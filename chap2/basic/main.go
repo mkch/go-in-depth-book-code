@@ -32,11 +32,11 @@ func Shift() {
 }
 
 func BinaryBitwise() {
-	var a int8 = 10 //     二进制 1010
-	var b int8 = 12 //     二进制 1100
-	and := a & b    // 8  (二进制 1000)
-	or := a | b     // 14 (二进制 1110)
-	xor := a ^ b    // 6  (二进制 0110)
+	var a int8 = 10 //     二进制 00001010
+	var b int8 = 12 //     二进制 00001100
+	and := a & b    // 8  (二进制 00001000)
+	or := a | b     // 14 (二进制 00001110)
+	xor := a ^ b    // 6  (二进制 00000110)
 
 	fmt.Printf("%v: %[1]b  %v: %[2]b  %v: %[3]b\n", and, or, xor)
 }
