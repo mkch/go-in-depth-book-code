@@ -17,7 +17,8 @@ func Session() {
 		_ = s // 使用 s
 	})
 
-	http.ListenAndServe(":8888", &session.Handler{Handler: http.DefaultServeMux})
+	http.ListenAndServe(":8888",
+		&session.Handler{Handler: http.DefaultServeMux})
 }
 
 func HttpContextKey() {

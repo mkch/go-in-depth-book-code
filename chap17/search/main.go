@@ -48,7 +48,7 @@ func Search(ctx context.Context, keyword string) (*Result, error) {
 
 	ch := make(chan *result)
 
-	go func() { // 3
+	go func() {
 		ch <- NewResult(http.DefaultClient.Do(bingRequest))
 	}()
 
@@ -57,12 +57,12 @@ func Search(ctx context.Context, keyword string) (*Result, error) {
 
 	}()
 
-	// 4 等待并发搜索结果
+	// 等待并发搜索结果
 	r := <-ch
 	// 较快的一个搜索已经返回，取消 Context
 	cancel()
 
-	// 5 清理落后者
+	// 清理落后者
 	failure := <-ch
 	if failure.Body != nil {
 		io.Copy(io.Discard, failure.Body)

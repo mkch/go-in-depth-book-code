@@ -7,7 +7,6 @@ import (
 
 type ctxKey struct{}
 
-// 1
 var key ctxKey
 
 type Handler struct {
@@ -15,14 +14,16 @@ type Handler struct {
 }
 
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	// 正常流程应该为
-	// 从 r.Cookies() 中取出 session data
-	// 校验 session data
-	// 通过 w 刷新 session
-
-	var sessionData = "session data" // 假设这是取出的 session data
-	r = r.WithContext(context.WithValue(r.Context(), key, sessionData))
+	r = r.WithContext(context.WithValue(r.Context(), key, cookieSession(w, r)))
 	h.Handler.ServeHTTP(w, r)
+}
+
+// cookieSession 从 cookie 中取出 session 数据
+func cookieSession(w http.ResponseWriter, r *http.Request) any {
+	// 从 r.Cookie() 中取出 session key
+	// 通过 session key 取出对应的 session data
+	// 或者使用 http.SetCookie(w, ...) 写出 session key
+	return "session data" // 假设这是取出的 session data
 }
 
 // Get 得到此次请求所对应的 Session 数据
