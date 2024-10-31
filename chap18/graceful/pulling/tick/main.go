@@ -54,7 +54,7 @@ func startWorkerPrior23(ctx context.Context, id int) {
 	go func() {
 		defer group.Done()
 		ticker := time.NewTicker(time.Second)
-		defer ticker.Stop()
+		defer ticker.Stop() // 确保 ticker 会被终止
 	loop:
 		for {
 			select {
