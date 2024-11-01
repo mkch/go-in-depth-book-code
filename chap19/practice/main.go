@@ -69,15 +69,16 @@ func Validate(v any) error {
 	return nil // 实现代码省略
 }
 
-func Decode[T any](w http.ResponseWriter, decode func(T, any) error, arg T, dest any) (ok bool) {
+func Decode[T any](w http.ResponseWriter, decode func(T, any) error, arg T, dest any) bool {
 	var err error
 	if err = decode(arg, dest); err == nil {
 		err = Validate(dest)
 	}
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		return false
 	}
-	return
+	return true
 }
 
 func Handle(w http.ResponseWriter, r *http.Request) {
@@ -125,7 +126,6 @@ func Handle2(w http.ResponseWriter, r *http.Request) {
 	if !Decode[io.Reader](w, DecodeBody, r.Body, &body) ||
 		!Decode(w, DecodeQuey, r.URL.Query(), &query) ||
 		!Decode(w, DecodeHeader, r.Header, &header) {
-		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	// ...
