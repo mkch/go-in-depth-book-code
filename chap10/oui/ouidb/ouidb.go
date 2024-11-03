@@ -17,16 +17,16 @@ import (
 var primes = [...]uint32{7, 17, 37, 79, 163, 331, 673, 1361, 2729, 5471, 10949, 21911, 43853, 87719, 175447}
 
 // nextPrime 在 primes 里寻找下一个质数.
-// 用质数做桶数量, 可以最大程度减少哈希冲突的概率, 使哈希后的数据分布的更加均匀
+// 用质数做桶数量, 可以最大程度减少哈希冲突的概率, 使哈希后的数据分布的更加均匀.
 func nextPrime(n uint32) uint32 {
 	i, _ := slices.BinarySearch(primes[:], n)
 	return primes[i]
 }
 
-// 文件头
+// 文件头.
 const fileHeader = "OUI\x00"
 
-// 此文件中编码数值时用到的字节序
+// 此文件中编码数值时用到的字节序.
 var Order binary.ByteOrder = binary.LittleEndian
 
 type OUI struct {
@@ -34,7 +34,7 @@ type OUI struct {
 	Company string
 }
 
-// Write 写出 data 到文件哈希表 w
+// Write 写出 data 到文件哈希表 w.
 func Write(w io.Writer, data []OUI) error {
 	// 桶个数. 是项目个数的 1.25倍(10/8)
 	var nBucket = nextPrime(uint32(len(data) * 10 / 8))
@@ -102,7 +102,7 @@ func Write(w io.Writer, data []OUI) error {
 	return nil
 }
 
-// Generate 从 https://standards-oui.ieee.org/ 读取数据并生成数据库文件到 w
+// Generate 从 https://standards-oui.ieee.org/ 读取数据并生成数据库文件到 w.
 func Generate(w io.Writer) error {
 	resp, err := http.Get("https://standards-oui.ieee.org/")
 	if err != nil {
@@ -138,8 +138,8 @@ type DB struct {
 	nBucket uint32
 }
 
-// NewDB 创建一个 *DB
-// r 必须为 Write 写出的文件哈希表.
+// NewDB 创建一个 *DB.
+// r 必须为 [Write] 写出的文件哈希表.
 func NewDB(r io.ReadSeeker) (db *DB, err error) {
 	var buf [4]byte
 	// 读文件头
@@ -158,8 +158,8 @@ func NewDB(r io.ReadSeeker) (db *DB, err error) {
 	return &DB{r, nBucket}, nil
 }
 
-// Lookup 从数据中查询指定 OUI 对应的 company
-// 如果找到, 返回非空 company 和 nil error
+// Lookup 从数据中查询指定 OUI 对应的 company.
+// 如果找到, 返回非空 company 和 nil error.
 func (db *DB) Lookup(oui string) (company string, err error) {
 	// 把 oui 解析为 uint32
 	id, err := strconv.ParseUint(oui, 16, 32)
