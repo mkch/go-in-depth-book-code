@@ -23,3 +23,4 @@ go.work
 testdata/
 
 chap20/basic/out.txt
+chap10/oui/ouidb/db
