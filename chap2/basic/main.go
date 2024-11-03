@@ -22,6 +22,7 @@ func main() {
 	Shift()
 	BinaryBitwise()
 	UnaryBitwise()
+	BitwiseFlag()
 }
 
 func Shift() {
@@ -32,13 +33,17 @@ func Shift() {
 }
 
 func BinaryBitwise() {
-	var a int8 = 10 //     二进制 00001010
-	var b int8 = 12 //     二进制 00001100
-	and := a & b    // 8  (二进制 00001000)
-	or := a | b     // 14 (二进制 00001110)
-	xor := a ^ b    // 6  (二进制 00000110)
+	var n uint8 = 170  //    二进制 10101010
+	not := ^n          // 85 二进制 01010101
+	var a int8 = 10    //          二进制 00001010
+	var b int8 = 12    //          二进制 00001100
+	and := a & b       // 8        二进制 00001000
+	or := a | b        // 14       二进制 00001110
+	xor := a ^ b       // 6        二进制 00000110
+	clr := a &^ b      // 2        二进制 00000010
+	a2 := (a | b) &^ b // 10 (即 a 的值): &^ 和 | 互为逆运算
 
-	fmt.Printf("%v: %[1]b  %v: %[2]b  %v: %[3]b\n", and, or, xor)
+	fmt.Printf("%v: %[1]b  %v: %[1]b  %v: %[2]b  %v: %[3]b %v: %[4]b %v: %[5]b\n", not, and, or, xor, clr, a2)
 }
 
 func UnaryBitwise() {
@@ -49,6 +54,30 @@ func UnaryBitwise() {
 	cb := ^b         // 9    (二进制 00001001)
 
 	fmt.Printf("%v: %[1]b %v: %[1]b\n", ca, cb)
+}
+
+func BitwiseFlag() {
+	type Flag uint8
+	const (
+		X Flag = 1 << iota // 00000001
+		W                  // 00000010
+		R                  // 00000100
+	)
+	flags := W | X           // 00000011: flags 中同时包含了 WX
+	hasW := (flags & W) != 0 // true: flags 中包含 W
+	hasR := (flags & R) != 0 // false: flags 中不包含 R
+
+	fmt.Printf("flags=%b hasW=%v hasR=%v\n", flags, hasW, hasR)
+
+	flags |= R              // 00000111: 为 flags 添加 R
+	hasR = (flags & R) != 0 // true: flags 中包含 R
+
+	fmt.Printf("flags=%b hasR=%v\n", flags, hasR)
+
+	flags &^= X              // 00000110: 从 flags 中清除 X
+	hasX := (flags & X) != 0 // false: flags 中不包含 X
+
+	fmt.Printf("flags=%b hasX=%v\n", flags, hasX)
 }
 
 func f() io.Reader {
