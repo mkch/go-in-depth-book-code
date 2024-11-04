@@ -4,15 +4,20 @@ import (
 	"os"
 	"ouidb"
 	"ouisql"
+	"path/filepath"
 	"testing"
 )
 
+const OUI_DB = "testdata/oui_db"
+const OUI_SQLITE = "testdata/oui_sqlite"
+
 func TestMain(m *testing.M) {
-	_, err := os.Stat("ouidb/db")
+	_, err := os.Stat(OUI_DB)
 	if err != nil {
 		if os.IsNotExist(err) {
-			// 如果 ouidb/db 不存在, 就生成它
-			f, err := os.OpenFile("ouidb/db", os.O_WRONLY|os.O_CREATE, 0600)
+			// 如果 OUIDB 不存在, 就生成它
+			os.MkdirAll(filepath.Dir(OUI_DB), 0600)
+			f, err := os.OpenFile(OUI_DB, os.O_WRONLY|os.O_CREATE, 0600)
 			if err != nil {
 				panic(err)
 			}
@@ -26,11 +31,12 @@ func TestMain(m *testing.M) {
 		}
 	}
 
-	_, err = os.Stat("ouidb/ouisql/db")
+	_, err = os.Stat(OUI_SQLITE)
 	if err != nil {
 		if os.IsNotExist(err) {
-			// 如果 ouidb/ouisql/db 不存在, 就生成它
-			err = ouisql.Generate("ouidb/ouisql/db")
+			// 如果 OUI_SQLITE 不存在, 就生成它
+			os.MkdirAll(filepath.Dir(OUI_SQLITE), 0600)
+			err = ouisql.Generate(OUI_SQLITE)
 			if err != nil {
 				panic(err)
 			}
@@ -43,7 +49,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestOuidbLookup(t *testing.T) {
-	f, err := os.Open("ouidb/db")
+	f, err := os.Open(OUI_DB)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -73,7 +79,7 @@ func TestOuidbLookup(t *testing.T) {
 }
 
 func TestOuisqlLookup(t *testing.T) {
-	db, err := ouisql.NewDB("ouidb/ouisql/db")
+	db, err := ouisql.NewDB(OUI_SQLITE)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -99,7 +105,7 @@ func TestOuisqlLookup(t *testing.T) {
 }
 
 func BenchmarkOuidbLookup(b *testing.B) {
-	f, err := os.Open("ouidb/db")
+	f, err := os.Open(OUI_DB)
 	if err != nil {
 		b.Fatal(err)
 	}
@@ -115,7 +121,7 @@ func BenchmarkOuidbLookup(b *testing.B) {
 }
 
 func BenchmarkOuisqlLookup(b *testing.B) {
-	db, err := ouisql.NewDB("ouidb/ouisql/db")
+	db, err := ouisql.NewDB(OUI_SQLITE)
 	if err != nil {
 		b.Fatal(err)
 	}
