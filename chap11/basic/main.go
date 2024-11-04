@@ -36,7 +36,7 @@ func basic() {
 		// 1 启动一个新的 goroutine, 向 c1 中写入 1
 		c1 <- 1
 	}()
-	<-c1 // 2 此处可以读出 1.
+	<-c1 // 2 此处可以读出 1
 
 	//c1 <- 100             // 向 c1 中写入值 100
 	//var str string = <-c2 // 从 c2 中读出一个值并赋值给 str
@@ -60,7 +60,7 @@ func basic() {
 	closeSignal2()
 }
 
-// NewIdGenerator 返回一个并发安全的顺序 ID 生成器
+// NewIdGenerator 返回一个并发安全的顺序 ID 生成器.
 func NewIdGenerator() func() (g uint64) {
 	c := make(chan uint64)
 	producer := func(w chan<- uint64) {
@@ -73,7 +73,7 @@ func NewIdGenerator() func() (g uint64) {
 	return func() uint64 { return <-c }
 }
 
-// closed 演示 channel 的 close() 操作
+// closed 演示 channel 的 close() 操作.
 func closed() {
 	c := make(chan int)
 	go func() {

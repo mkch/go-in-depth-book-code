@@ -42,7 +42,7 @@ func concept() {
 	// 下面代码将引发 panic
 	//_ = *p3
 	if p3 == nil {
-		// p3 指向的值不存在,不可使用 *p3
+		// p3 不执行指向任何有效值, 不可使用 *p3
 	} else {
 		// 可以使用 *p3
 		fmt.Println(*p3)
