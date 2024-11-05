@@ -26,7 +26,7 @@ func main() {
 
 var group sync.WaitGroup
 
-// startWorker 启动一个 worker goroutine
+// startWorker 启动一个 worker goroutine.
 func startWorker(ctx context.Context, id int) {
 	group.Add(1)
 	go func() {
@@ -48,7 +48,8 @@ func startWorker(ctx context.Context, id int) {
 	}()
 }
 
-// startWorker 启动一个 worker goroutine
+// startWorkerPrior23 启动一个 worker goroutine.
+// 演示在 Go1.23 之前如何正确释放 ticker
 func startWorkerPrior23(ctx context.Context, id int) {
 	group.Add(1)
 	go func() {

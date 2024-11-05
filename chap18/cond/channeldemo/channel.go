@@ -20,7 +20,7 @@ func Make[T any](capacity int) *Channel[T] {
 	return c
 }
 
-// Send 向 c 中写入一个值 v
+// Send 向 c 中写入一个值 v.
 // 相当于 c <- v
 func (c *Channel[T]) Send(v T) {
 	c.cond.L.Lock()

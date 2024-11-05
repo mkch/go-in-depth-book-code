@@ -7,10 +7,6 @@ import (
 	"net/http"
 )
 
-func main() {
-	// NOP.
-}
-
 func Session() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		s := session.Get(r)

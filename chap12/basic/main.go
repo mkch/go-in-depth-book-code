@@ -42,7 +42,7 @@ func concept() {
 	// 下面代码将引发 panic
 	//_ = *p3
 	if p3 == nil {
-		// p3 不执行指向任何有效值, 不可使用 *p3
+		// p3 不指向任何有效值, 不可使用 *p3
 	} else {
 		// 可以使用 *p3
 		fmt.Println(*p3)
@@ -64,8 +64,8 @@ type S struct {
 
 func (s S) Method() {}
 
-// PS 是一个"定义类型"(defined type)
-// 其底层类型为 *S
+// PS 是一个"定义类型"(defined type),
+// 其底层类型为 *S.
 type PS *S
 
 func implicitIndirection() {

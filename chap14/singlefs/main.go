@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// SingleFS 是一个只包含一个文件的 fs.FS
+// SingleFS 是一个只包含一个文件的 fs.FS.
 type SingleFS struct {
 	fs.FS
 	file fs.FileInfo // 唯一的文件
@@ -52,7 +52,7 @@ func (s *SingleFS) Open(name string) (fs.File, error) {
 
 }
 
-// SingleDir 是一个只包含一个文件的 fs.ReadDirFile
+// SingleDir 是一个只包含一个文件的 fs.ReadDirFile.
 type SingleDir struct {
 	fs.ReadDirFile
 	file fs.FileInfo // 如果为 nil,表示已经遍历完毕

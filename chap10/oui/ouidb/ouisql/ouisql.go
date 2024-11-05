@@ -34,7 +34,7 @@ func Generate(filename string) error {
 	}
 	defer tx.Rollback()
 
-	// OR REPLACE: 由于某些原因, IEEE OUI 存在 id 重复的情况
+	// OR REPLACE: 由于某些原因, IEEE OUI 存在 id 重复的情况.
 	insert, err := tx.Prepare(`INSERT OR REPLACE INTO oui (id, company) VALUES(?,?)`)
 	if err != nil {
 		return err

@@ -132,8 +132,8 @@ Loop: // 为 for 循环定义一个标签
 }
 
 func Select() {
-	var ch1 = make(chan int)
-	var ch2 = make(chan int)
+	var ch1 chan int = make(chan int)
+	var ch2 chan int = make(chan int)
 	select {
 	case v1 := <-ch1:
 		_ = v1 // 使用 v1

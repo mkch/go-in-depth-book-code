@@ -26,7 +26,7 @@ func main() {
 
 var group sync.WaitGroup
 
-// startWorker 启动一个 worker goroutine
+// startWorker 启动一个 worker goroutine/
 func startWorker(ctx context.Context, id int) {
 	group.Add(1)
 	go func() {

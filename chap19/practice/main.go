@@ -10,7 +10,7 @@ import (
 
 func F(int) (int, error) { return 0, nil }
 
-// 如果 err != nil 则引发 panic, 否则返回 a
+// 如果 err != nil 则引发 panic, 否则返回 a.
 func Must[T any](a T, err error) T {
 	if err != nil {
 		panic(err)
@@ -41,30 +41,30 @@ func UseMust() {
 	// 使用 file
 }
 
-// DecodeBody 把 r 的内容解码后放入 dest 所指向的变量中
-// 类似 json.Unmarshal()
+// DecodeBody 把 r 的内容解码后放入 dest 所指向的变量中.
+// 类似 json.Unmarshal().
 func DecodeBody(r io.Reader, dest any) error {
 	// 实现代码省略
 	return nil
 }
 
-// DecodeQuey 把 m 解码后放入 dest 所指向的变量中
-// 类似 json.Unmarshal()
+// DecodeQuey 把 m 解码后放入 dest 所指向的变量中.
+// 类似 json.Unmarshal().
 func DecodeQuey(m url.Values, dest any) error {
 	// 实现代码省略
 	return nil
 }
 
-// DecodeHeader 把 m 解码后放入 dest 所指向的变量中
-// 类似 json.Unmarshal()
+// DecodeHeader 把 m 解码后放入 dest 所指向的变量中.
+// 类似 json.Unmarshal().
 func DecodeHeader(m http.Header, dest any) error {
 	// 实现代码省略
 	return nil
 }
 
-// Validate 对 v 进行校验
-// 如果 v 是 struct, 校验将根据 v 的 field tag 进行
-// https://github.com/go-playground/validator 就是一个类似的校验库
+// Validate 对 v 进行校验.
+// 如果 v 是 struct, 校验将根据 v 的 field tag 进行.
+// https://github.com/go-playground/validator 就是一个类似的校验库.
 func Validate(v any) error {
 	return nil // 实现代码省略
 }

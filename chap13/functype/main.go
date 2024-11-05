@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-// PrintFunc 是一个函数类型
+// PrintFunc 是一个函数类型.
 type PrintFunc func(...any) (int, error)
 
 func main() {

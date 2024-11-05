@@ -75,7 +75,7 @@ func Search(ctx context.Context, keyword string) (*Result, error) {
 	return &r.Result, nil
 }
 
-// bingSearchURL 返回一个 cn.bing.com 的搜索 URL
+// bingSearchURL 返回一个 cn.bing.com 的搜索 URL.
 func bingSearchURL(keyword string) *url.URL {
 	u, err := url.Parse("https://cn.bing.com/search")
 	if err != nil {
@@ -87,7 +87,7 @@ func bingSearchURL(keyword string) *url.URL {
 	return u
 }
 
-// sogouSearchURL 返回一个 sogou.com 的搜索 URL
+// sogouSearchURL 返回一个 sogou.com 的搜索 URL.
 func sogouSearchURL(keyword string) *url.URL {
 	u, err := url.Parse("https://sogou.com/web")
 	if err != nil {
@@ -99,7 +99,7 @@ func sogouSearchURL(keyword string) *url.URL {
 	return u
 }
 
-// 搜索结果
+// Result 是搜索结果.
 type Result struct {
 	Source string // 来源
 	Status string

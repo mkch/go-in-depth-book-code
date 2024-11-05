@@ -1,6 +1,6 @@
 package main
 
-// NoCompare 类型不可比较
+// NoCompare 类型不可比较.
 type NoCompara struct {
 	_  [0]func() // 1
 	F1 string

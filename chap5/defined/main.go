@@ -14,7 +14,7 @@ func Test() {
 	mn = MyInt(n)
 
 	var n1 MyInt = 1
-	_ = n1.Add(2)
+	var _ MyInt = n1.Add(2)
 }
 
 func (n MyInt) Add(n2 MyInt) MyInt {

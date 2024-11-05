@@ -22,7 +22,7 @@ func (c *Creator) AnOperation() {
 	product.Product()
 }
 
-// ContreteProduct 实现了 Product
+// ContreteProduct 实现了 Product/
 type ContreteProduct struct{}
 
 func (*ContreteProduct) Product() {

@@ -25,10 +25,10 @@ func main() {
 
 var group sync.WaitGroup
 
-// tasks 为向worker提交任务的通道
+// tasks 为向worker提交任务的通道.
 var tasks = make(chan int)
 
-// startWorker 启动一个 worker goroutine
+// startWorker 启动一个 worker goroutine.
 func startWorker(ctx context.Context, id int) {
 	group.Add(1)
 	go func() {

@@ -30,7 +30,7 @@ func waitGroup() {
 	group.Wait()
 }
 
-// Sum 返回参数 s 中所有元素的和
+// Sum 返回参数 s 中所有元素的和.
 func Sum(s []int) int {
 	if len(s) < 2 {
 		return sumImpl(s)
@@ -51,7 +51,7 @@ func Sum(s []int) int {
 	return sum1 + sum2
 }
 
-// Sum 返回参数 s 中所有元素的和
+// Sum 返回参数 s 中所有元素的和.
 func Sum2(s []int) int {
 	if len(s) < 2 {
 		return sumImpl(s)

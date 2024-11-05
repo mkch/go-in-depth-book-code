@@ -17,7 +17,7 @@ func encoding() {
 	fmt.Printf("%X %X\n", '中', "中")
 }
 
-// CopyString 类似内建的 copy 函数
+// CopyString 类似内建的 copy 函数,
 // 但要求复制到 dest 中的内容必须为有效的 UTF-8 序列.
 func CopyString2(dest []byte, src string) int {
 	// 如果 dest 可容纳 src, 则直接 copy

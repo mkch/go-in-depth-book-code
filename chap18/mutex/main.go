@@ -56,20 +56,20 @@ func main() {
 	group.Wait()
 }
 
-// Counter 是一个并发安全的计数器
+// Counter 是一个并发安全的计数器.
 type Counter struct {
 	value uintptr
 	lock  sync.RWMutex
 }
 
-// Inc 增加计数值
+// Inc 增加计数值.
 func (c *Counter) Inc() {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	c.value++
 }
 
-// Value 返回计数值
+// Value 返回计数值.
 func (c *Counter) Value() uintptr {
 	c.lock.RLock()
 	defer c.lock.RUnlock()

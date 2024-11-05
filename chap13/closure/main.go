@@ -17,12 +17,12 @@ func main() {
 
 }
 
-// Accumulator 时一个累加器
+// Accumulator 是一个累加器.
 // 每次调用 Accumulator 都会将参数 n 累加到一个内部状态
-// 并返回迄今为止的累加值
+// 并返回迄今为止的累加值.
 type Accumulator func(n int) (acc int)
 
-// NewAccumulator() 返回一个新的累加器
+// NewAccumulator() 返回一个新的累加器.
 func NewAccumulator() Accumulator {
 	var sum int                    // 第 21 行
 	return func(n int) (acc int) { // 第 22 行

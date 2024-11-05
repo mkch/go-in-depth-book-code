@@ -2,7 +2,7 @@ package pkg
 
 import "fmt"
 
-// 要实现 Iface 接口, 请在一个 struct 中嵌入 [Impl].
+// 要实现 Iface 接口, 必须嵌入 [Impl].
 type Iface interface {
 	F()
 	defaultImpl()

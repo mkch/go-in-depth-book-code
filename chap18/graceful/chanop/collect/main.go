@@ -25,10 +25,10 @@ func main() {
 
 var group sync.WaitGroup
 
-// results 为 worker 回报结果的通道
+// results 为 worker 回报结果的通道.
 var results = make(chan int)
 
-// startWorker 启动一个 worker goroutine
+// startWorker 启动一个 worker goroutine.
 func startWorker(ctx context.Context, id int) {
 	group.Add(1)
 	go func() {

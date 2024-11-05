@@ -5,17 +5,17 @@ import (
 	"math"
 )
 
-// Point 代表二维坐标系上的一个点
+// Point 代表二维坐标系上的一个点.
 type Point struct {
 	X, Y float64
 }
 
-// Distance 返回 p 到坐标原点的距离
+// Distance 返回 p 到坐标原点的距离.
 func (p Point) Distance() float64 {
 	return math.Sqrt(p.X*p.X + p.Y*p.Y)
 }
 
-// Offset 把 p 移动到偏移 (cx, cy) 的位置处
+// Offset 把 p 移动到偏移 (cx, cy) 的位置处.
 func (p *Point) Offset(cx, cy float64) {
 	p.X += cx
 	p.Y += cy

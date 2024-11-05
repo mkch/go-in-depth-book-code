@@ -27,8 +27,8 @@ func SafeConfigValue() (v string) {
 	return ConfigValue("a.config") // 尝试从配置文件中读取
 }
 
-// ConfigValue 从 configFile 中读取一个特定的配置值
-// 如果无法打开此文件, 将触发 panic
+// ConfigValue 从 configFile 中读取一个特定的配置值.
+// 如果无法打开此文件, 将触发 panic.
 func ConfigValue(configFile string) string {
 	f, err := os.Open(configFile) // 打开配置文件
 	if err != nil {
@@ -50,7 +50,7 @@ func ApplyConfig(v string) {
 
 var maxID uintptr
 
-// NextID 返回下一个全局递增 ID
+// NextID 返回下一个全局递增 ID.
 func NextID() (id uintptr) {
 	id = maxID
 	if maxID == ^uintptr(0) {

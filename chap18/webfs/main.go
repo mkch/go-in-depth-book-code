@@ -117,7 +117,7 @@ func newTask(name string, size uint64) *task {
 var curTaskLock sync.Mutex
 var curTask *task
 
-// setTask 设置当前任务为 task
+// setTask 设置当前任务为 task,
 // 如果当前有待下载任务, 返回 false.
 func setTask(task *task) bool {
 	curTaskLock.Lock()

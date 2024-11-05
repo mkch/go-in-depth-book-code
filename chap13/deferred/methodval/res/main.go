@@ -4,19 +4,19 @@ import (
 	"fmt"
 )
 
-// Resource 代表某种类型的资源
+// Resource 代表某种类型的资源.
 type Resource struct {
 	name string
 	// ...
 }
 
-// NewResource 创建一个名称为 name 的资源
+// NewResource 创建一个名称为 name 的资源.
 func NewResource(name string) *Resource {
 	fmt.Printf("Create resource %v\n", name)
 	return &Resource{name}
 }
 
-// Close 方法关闭资源 res
+// Close 方法关闭资源 res.
 func (res *Resource) Close() {
 	fmt.Printf("Close resource %v\n", res.name)
 }

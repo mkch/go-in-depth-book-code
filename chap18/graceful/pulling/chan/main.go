@@ -17,7 +17,7 @@ func main() {
 var done = make(chan struct{})
 var group sync.WaitGroup
 
-// startWorker 启动一个 worker goroutine
+// startWorker 启动一个 worker goroutine.
 func startWorker(id int) {
 	group.Add(1)
 	go func() {
@@ -40,7 +40,7 @@ func startWorker(id int) {
 	}()
 }
 
-// shutdown 关闭所有 worker 并等待其退出
+// shutdown 关闭所有 worker 并等待其退出.
 func shutdown() {
 	close(done)  // 发出退出信号
 	group.Wait() // 等待 worker 退出

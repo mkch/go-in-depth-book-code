@@ -21,7 +21,7 @@ func main() {
 	slice2D()
 }
 
-// 演示数组元素和索引
+// 演示数组元素和索引.
 func elemAndIndex() {
 	// ary 中有3个元素, 类型均为 int, 值均为为 int 的零值(0)
 	var ary [3]int
@@ -36,7 +36,7 @@ func elemAndIndex() {
 	_, _, _, _ = length, e0, e1, e2
 }
 
-// 演示数组长度是类型的一部分
+// 演示数组长度是类型的一部分.
 func arrayType() {
 	// var ary1 [1]int
 	// var ary2 [2]int
@@ -51,7 +51,7 @@ func multiD() {
 	ary[1] = [3]int{4, 5, 6}
 }
 
-// 演示数组是值类型
+// 演示数组是值类型.
 func arrayValue() {
 	ary1 := [...]byte{1, 2, 3}
 	ary2 := ary1
@@ -59,7 +59,7 @@ func arrayValue() {
 	fmt.Printf("&ary2=%p &ary2[0]=%p\n", &ary2, &ary2[0])
 }
 
-// 演示数组指针
+// 演示数组指针.
 func arrayPtr() {
 	ary1 := [...]byte{1, 2, 3}
 	var pary1 *[3]byte = &ary1 // pary1 为 ary1 的指针
@@ -70,7 +70,7 @@ func arrayPtr() {
 	fmt.Println(ary1)
 }
 
-// 演示切片操作
+// 演示切片操作.
 func slice1() {
 	var ary = [5]int{10, 20, 30, 40, 50}
 	var s []int = ary[1:3] // 1
@@ -85,7 +85,7 @@ func slice1() {
 	fmt.Println(ary, s, s1)
 }
 
-// 演示 make()
+// 演示 make().
 func makeSlice() {
 	// s 的长度为 3, 容量为 3
 	var s []int = make([]int, 3)
@@ -97,7 +97,7 @@ func makeSlice() {
 	copy(s, s)
 }
 
-// 演示 copy()
+// 演示 copy().
 func copySlice() {
 	s := []byte{1, 2, 3}
 	s1 := make([]byte, len(s))
@@ -111,7 +111,7 @@ func copySlice() {
 	fmt.Println(s1, n, s2, n2)
 }
 
-// 演示 append()
+// 演示 append().
 func appendSlice() {
 	s := []byte{1}
 	s = append(s, 2, 3)

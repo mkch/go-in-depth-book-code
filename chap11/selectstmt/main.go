@@ -90,7 +90,7 @@ func valBackupDefault() {
 	fmt.Println(v)
 }
 
-// readTimeout 从 c 中读取一个值, 如果阻塞时间过长则返回非 nil error
+// readTimeout 从 c 中读取一个值, 如果阻塞时间过长则返回非 nil error.
 func readTimeout(c <-chan int) (int, error) {
 	// timer 控制读取的超时
 	timer := time.NewTimer(time.Millisecond * 20)
@@ -104,7 +104,7 @@ func readTimeout(c <-chan int) (int, error) {
 }
 
 // sendWithDrop 试图把 item 写入 ch 中,
-// 如果此写入会阻塞, 则抛弃该值
+// 如果此写入会阻塞, 则抛弃该值.
 func sendWithDrop(c chan<- int, item int) {
 	select {
 	case c <- item:
@@ -116,7 +116,7 @@ func sendWithDrop(c chan<- int, item int) {
 
 // sendKeepLatest 试图把 item 写入 ch 中,
 // 如果此写入会阻塞, 则抛弃已缓冲的值而写入 item.
-// 要求 c 必须为一个容量为 1 的 channel
+// 要求 c 必须为一个容量为 1 的 channel.
 func sendKeepLatest(c chan int, item int) {
 	select {
 	case <-c:

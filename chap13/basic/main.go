@@ -23,12 +23,12 @@ func main() {
 	fmt.Println(n)
 }
 
-// Add 把 a+b 的结果作为 int64 返回
+// Add 把 a+b 的结果作为 int64 返回.
 func Add(a int, b int) int64 {
 	return int64(a + b)
 }
 
-// avg 返回所有参数的平均值
+// avg 返回所有参数的平均值.
 func avg(args ...int) int {
 	if len(args) == 0 {
 		return 0

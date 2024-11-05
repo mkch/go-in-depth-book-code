@@ -24,7 +24,7 @@ func makeMap() {
 	clear(map[string]int(nil))
 }
 
-// basicOp 演示 map 基本操作
+// basicOp 演示 map 基本操作.
 func basicOp() {
 	// 初始化
 	var colors = map[string]int{

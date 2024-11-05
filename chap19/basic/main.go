@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"maps"
 	"net/http"
 	"net/url"
@@ -14,7 +13,7 @@ type Int interface {
 	~int8 | ~int | ~int16 | ~int32 | ~int64
 }
 
-// Sum 计算参数之和
+// Sum 计算参数之和.
 func Sum[T Int](values ...T) (r T) {
 	for _, v := range values {
 		r += v
@@ -27,12 +26,12 @@ type Node[T any] struct {
 	Next  *Node[T]
 }
 
-// List 是一个链表
+// List 是一个链表.
 type List[T any] struct {
 	Head *Node[T]
 }
 
-// Size 返回 l 的长度
+// Size 返回 l 的长度.
 func (l *List[T]) Size() (r int) {
 	for p := l.Head; p != nil; p = p.Next {
 		r++
@@ -53,7 +52,7 @@ func SumStr[T IntStringer](values ...T) string {
 	return sum.String()
 }
 
-// Scale 返回 s 的一个拷贝, 其中每个元素都乘以 c
+// Scale 返回 s 的一个拷贝, 其中每个元素都乘以 c.
 func Scale[S ~[]E, E Int](s S, c E) S {
 	r := make(S, len(s))
 	for i, v := range s {
@@ -62,7 +61,7 @@ func Scale[S ~[]E, E Int](s S, c E) S {
 	return r
 }
 
-// Point 为一个多维的点
+// Point 为一个多维的点.
 type Point []int32
 
 func (p Point) String() string {
@@ -77,18 +76,6 @@ func main() {
 	var pt = Point{1, 2, 3}
 	pt2 := Scale(pt, 2)
 	fmt.Println(pt2.String())
-}
-
-// DiscardG 完全可以用 下列 Discard 代替
-// 用基本接口做类型参数没有太大的实际意义
-func DiscardG[T io.Reader](r T) error {
-	_, err := io.Copy(io.Discard, r)
-	return err
-}
-
-func Discard(r io.Reader) error {
-	_, err := io.Copy(io.Discard, r)
-	return err
 }
 
 func F[T comparable](a T) {

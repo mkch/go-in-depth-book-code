@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-// PrintSum 打印出从 from 到 to 的整数的和
-// 本函数在计算出和 sum 后, 会调用 print(sum) 来执行打印操作
+// PrintSum 打印出从 from 到 to 的整数的和.
+// 本函数在计算出和 sum 后, 会调用 print(sum) 来执行打印操作.
 func PrintSum(from, to int, print func(n int)) {
 	sum := (from + to) * (to - from + 1) / 2
 	print(sum)

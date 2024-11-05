@@ -5,12 +5,12 @@ import (
 	"example/demo/internal/bitmapdata"
 )
 
-// Bitmap 代表一幅位图
+// Bitmap 代表一幅位图.
 type Bitmap struct {
 	*bitmapdata.BitmapData
 }
 
-// Draw 把 b 绘制到 canvas 上的 (x0, y0) 处
+// Draw 把 b 绘制到 canvas 上的 (x0, y0) 处.
 func (b *Bitmap) Draw(x0, y0 int, canvas *canvas.Canvas) {
 	cx, cy := b.Dimension()
 	for x := 0; x < cx; x++ {
@@ -20,7 +20,7 @@ func (b *Bitmap) Draw(x0, y0 int, canvas *canvas.Canvas) {
 	}
 }
 
-// New 创建一幅宽度为 cx, 高度为 cy 的位图
+// New 创建一幅宽度为 cx, 高度为 cy 的位图.
 func New(cx, cy int) *Bitmap {
 	return &Bitmap{
 		bitmapdata.New(cx, cy),

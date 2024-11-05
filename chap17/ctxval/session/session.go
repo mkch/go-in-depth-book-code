@@ -18,7 +18,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.Handler.ServeHTTP(w, r)
 }
 
-// cookieSession 从 cookie 中取出 session 数据
+// cookieSession 从 cookie 中取出 session 数据.
 func cookieSession(w http.ResponseWriter, r *http.Request) any {
 	// 从 r.Cookie() 中取出 session key
 	// 通过 session key 取出对应的 session data
@@ -26,7 +26,7 @@ func cookieSession(w http.ResponseWriter, r *http.Request) any {
 	return "session data" // 假设这是取出的 session data
 }
 
-// Get 得到此次请求所对应的 Session 数据
+// Get 得到此次请求所对应的 Session 数据.
 func Get(r *http.Request) any {
 	return r.Context().Value(key)
 }

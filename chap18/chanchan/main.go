@@ -27,14 +27,14 @@ func main() {
 	group.Wait()
 }
 
-// SumCalc 是一个计算器
+// SumCalc 是一个计算器.
 type SumCalc struct {
 	taskChan chan *task
 	group    sync.WaitGroup
 }
 
-// NewSumCalc 创建一个新的 SumCalc
-// 使用完毕后必须调用 Close() 方法关闭
+// NewSumCalc 创建一个新的 SumCalc.
+// 使用完毕后必须调用 Close() 方法关闭.
 func NewSumCalc() (calc *SumCalc) {
 	calc = &SumCalc{taskChan: make(chan *task)}
 	const MAX_WORKERS = 3
@@ -45,13 +45,13 @@ func NewSumCalc() (calc *SumCalc) {
 	return
 }
 
-// Close 关闭 sum, 释放其所占用的资源
+// Close 关闭 sum, 释放其所占用的资源.
 func (sum *SumCalc) Close() {
 	close(sum.taskChan)
 	sum.group.Wait()
 }
 
-// Sum 计算 s 中所有元素的和
+// Sum 计算 s 中所有元素的和.
 func (sum *SumCalc) Sum(s []int) int {
 	var sumTask = &task{
 		param:  s,
@@ -62,15 +62,15 @@ func (sum *SumCalc) Sum(s []int) int {
 	return <-sumTask.result // 从 worker goroutine 接收任务执行结果
 }
 
-// task 是提交给 worker 的一个任务
+// task 是提交给 worker 的一个任务.
 type task struct {
 	param  []int    // 欲计算其和的 slice
 	result chan int // 计算的结果写入此 chan
 }
 
 // worker 不断从 taskChan 读取 task, 计算 task.s 的和并把
-// 结果写入 task.result
-// worker 在返回前会调用 group.Done()
+// 结果写入 task.result.
+// worker 在返回前会调用 group.Done().
 func worker(group *sync.WaitGroup, taskChan <-chan *task) {
 	defer group.Done()
 	for {

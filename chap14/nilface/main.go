@@ -18,8 +18,8 @@ func main() {
 	}
 }
 
-// F 创建一个 io.Reader
-// 如果创建失败, 返回 nil
+// F 创建一个 io.Reader.
+// 如果创建失败, 返回 nil.
 func F(n int) io.Reader {
 	var b *strings.Reader
 	if n >= 0 {

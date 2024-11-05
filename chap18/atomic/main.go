@@ -8,39 +8,39 @@ import (
 	"time"
 )
 
-// Counter 是一个并发安全的计数器
+// Counter 是一个并发安全的计数器。
 type Counter struct {
 	value atomic.Uintptr
 }
 
-// Inc 增加计数值
+// Inc 增加计数值。
 func (c *Counter) Inc() {
 	c.value.Add(1)
 }
 
-// Value 返回计数值
+// Value 返回计数值。
 func (c *Counter) Value() uintptr {
 	return c.value.Load()
 }
 
-// LockFreeSlice 是一个无锁的 []int
+// LockFreeSlice 是一个无锁的 []int。
 type LockFreeSlice struct {
 	p atomic.Pointer[[]int]
 }
 
-// NewLockFreeSlice 创建一个 LockFreeSlice, 初始内容为 s
+// NewLockFreeSlice 创建一个 LockFreeSlice, 初始内容为 s。
 func NewLockFreeSlice(s []int) *LockFreeSlice {
 	ret := &LockFreeSlice{}
 	ret.p.Store(&s)
 	return ret
 }
 
-// Value 返回 l 的值
+// Value 返回 l 的值。
 func (slice *LockFreeSlice) Value() []int {
 	return slices.Clone(*slice.p.Load())
 }
 
-// Append 类似内建函数 append, 但是可以在并发环境中使用
+// Append 类似内建函数 append, 但是可以在并发环境中使用。
 func (slice *LockFreeSlice) Append(s []int) {
 	for {
 		old := slice.p.Load()
