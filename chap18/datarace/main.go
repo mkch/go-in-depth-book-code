@@ -3,8 +3,35 @@ package main
 import (
 	"fmt"
 	"math"
+	"runtime"
 	"sync"
 )
+
+func F1() {
+	var total int
+
+	go func() {
+		for range 100 {
+			total += 1
+		}
+	}()
+
+	for range 100 {
+		runtime.Gosched()
+		total -= 1
+	}
+
+	// busy loop, 仅用作演示, 不推荐
+	for total != 0 {
+	}
+}
+
+func main() {
+	for i := range math.MaxInt {
+		fmt.Println(i)
+		F1()
+	}
+}
 
 func F1_Fixed() {
 	var total int
@@ -30,29 +57,4 @@ func F1_Fixed() {
 	}
 
 	group.Wait()
-}
-
-func F1() {
-	var total int
-
-	go func() {
-		for range 100 {
-			total += 1
-		}
-	}()
-
-	for range 100 {
-		total -= 1
-	}
-
-	// busy loop, 仅用作演示, 不推荐
-	for total != 0 {
-	}
-}
-
-func main() {
-	for i := range math.MaxInt {
-		fmt.Println(i)
-		F1()
-	}
 }
