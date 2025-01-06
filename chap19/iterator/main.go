@@ -133,7 +133,8 @@ func main() {
 
 	keys := slices.Values([]int{1, 2, 3})
 	values := slices.Values([]string{"a", "b", "c"})
-	for k, v := range Zip(keys, values) {
+	zipped := Zip(keys, values)
+	for k, v := range zipped {
 		fmt.Println(k, v)
 	}
 }

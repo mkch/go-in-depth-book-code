@@ -60,12 +60,12 @@ func Write(w io.Writer, data []OUI) error {
 		}
 
 		// 桶数据的格式为
-		// 1字节列表长度n 应列表项0 应列表项1 ... 应列表项n
+		// 1字节列表长度n, 列表项0, 应列表项1 ... 应列表项n
 
 		bucketsData.WriteByte(byte(bucketLen)) // 写列表长度
 		for _, oui := range b {
 			// 列表项格式为
-			// 4字节Id 1字节Company长度n 长度为n的UTF-8序列
+			// 4字节Id, 1字节Company长度n, 长度为n的UTF-8序列
 			Order.PutUint32(buf[:], oui.Id)
 			bucketsData.Write(buf[:]) // 写 Id
 			companyLen := len(oui.Company)

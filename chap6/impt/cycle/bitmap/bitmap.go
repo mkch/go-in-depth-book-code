@@ -5,8 +5,8 @@ type Bitmap struct {
 	// 实现代码省略
 }
 
-// Width 返回 b 的宽度和高度.
-func (b *Bitmap) Dimension() (cx, cy int) {
+// Dimensions 返回 b 的宽度和高度.
+func (b *Bitmap) Dimensions() (cx, cy int) {
 	return 0, 0 // 实现代码省略
 }
 
@@ -22,7 +22,7 @@ func (b *Bitmap) SetPixel(x, y int, color uint32) {
 
 // Draw 把 b 绘制到 canvas 上的 (x0, y0) 处.
 // func (b *Bitmap) Draw(x0, y0 int, canvas *canvas.Canvas) {
-// 	cx, cy := b.Dimension()
+// 	cx, cy := b.Dimensions()
 // 	for x := 0; x < cx; x++ {
 // 		for y := 0; y < cy; y++ {
 // 			canvas.DrawPixel(x0+x, y0+y, b.Pixel(x, y))

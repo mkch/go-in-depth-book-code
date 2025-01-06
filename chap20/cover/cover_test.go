@@ -1,7 +1,7 @@
 package cover_test
 
 import (
-	"cover"
+	"example/cover"
 	"testing"
 )
 
@@ -21,5 +21,5 @@ func TestF(t *testing.T) {
 	if cover.F(true) != "a" {
 		t.Fail()
 	}
-	cover.F(false)
+	//cover.F(false) // panic
 }

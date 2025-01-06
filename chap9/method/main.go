@@ -28,6 +28,6 @@ func main() {
 
 	// 绑定到值的方法可以用在临时变量上
 	Point{3, 4}.Distance()
-	// 编译错误！绑定到指针的方法不可用在临时变量上
-	//func() Point { return Point{3, 4} }().Offset(1, 1)
+	//Point{3, 4}.Offset(1, 1)                           // !! 语法错误!! 绑定到指针的方法不可用在临时变量上
+	//func() Point { return Point{3, 4} }().Offset(1, 1) // !! 语法错误!! 原因同上
 }

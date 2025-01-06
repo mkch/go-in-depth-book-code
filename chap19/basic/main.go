@@ -21,6 +21,44 @@ func Sum[T Int](values ...T) (r T) {
 	return
 }
 
+type IntNode struct {
+	Value int
+	Next  *IntNode
+}
+
+// IntList 是一个 int 链表
+type IntList struct {
+	Head *IntNode
+}
+
+// Size 返回 l 的长度
+func (l *IntList) Size() (r int) {
+	for p := l.Head; p != nil; p = p.Next {
+		r++
+	}
+	return
+}
+
+// 更多方法
+
+type Int8Node struct {
+	Value int8
+	Next  *Int8Node
+}
+
+// Int8List 是一个 int8 链表
+type Int8List struct {
+	Head *Int8Node
+}
+
+// Size 返回 l 的长度
+func (l *Int8List) Size() (r int) {
+	for p := l.Head; p != nil; p = p.Next {
+		r++
+	}
+	return
+}
+
 type Node[T any] struct {
 	Value T
 	Next  *Node[T]
@@ -76,6 +114,10 @@ func main() {
 	var pt = Point{1, 2, 3}
 	pt2 := Scale(pt, 2)
 	fmt.Println(pt2.String())
+
+	var _ int8 = Sum[int8](1, 2, 3)
+	var _ int64 = Sum[int64](400, 500, 600)
+
 }
 
 func F[T comparable](a T) {

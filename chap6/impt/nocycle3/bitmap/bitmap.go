@@ -5,8 +5,8 @@ type Bitmap struct {
 	// 实现代码省略
 }
 
-// Width 返回 b 的宽度和高度.
-func (b *Bitmap) Dimension() (cx, cy int) {
+// Dimensions 返回 b 的宽度和高度.
+func (b *Bitmap) Dimensions() (cx, cy int) {
 	return 0, 0 // 实现代码省略
 }
 

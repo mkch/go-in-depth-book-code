@@ -7,13 +7,14 @@ import (
 )
 
 func main() {
-	var rwc io.Writer = os.Stdin // 1
-	r := rwc.(io.Reader)         // 2
-	c := rwc.(io.Closer)         // 3
-	conn, ok := rwc.(net.Conn)   // 4
+	var rwc io.Writer = os.Stdin
+	f := rwc.(*os.File)
+	r := rwc.(io.Reader)
+	c := rwc.(io.Closer)
+	conn, ok := rwc.(net.Conn)
 	_ = conn
 	//conn = rwc.(net.Conn) // 5: panic
-	_, _, _, _ = r, c, conn, ok
+	_, _, _, _, _ = f, r, c, conn, ok
 
 	var x io.Writer
 	_, ok = x.(io.Writer) // ok 为 false

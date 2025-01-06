@@ -19,7 +19,7 @@ func (c *Creator) FactoryMethod() Product {
 }
 
 func (c *Creator) AnOperation() {
-	// !! 错误: 此处永远调用 (*BaseCreator).FactoryMethod() !!
+	// !! 错误: 此处永远调用 (*Creator).FactoryMethod() !!
 	product := c.FactoryMethod()
 	product.Product()
 }
@@ -28,7 +28,7 @@ type ContreteCreator struct {
 	Creator // !! 嵌入不具有多态性 !!
 }
 
-// !! 错误: 试图覆盖 (*BaseCreator).FactoryMethod() !!
+// !! 错误: 试图覆盖 (*Creator).FactoryMethod() !!
 func (c *ContreteCreator) FactoryMethod() Product {
 	return new(ContreteProduct)
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"slices"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -23,57 +22,65 @@ func (c *Counter) Value() uintptr {
 	return c.value.Load()
 }
 
-// LockFreeSlice 是一个无锁的 []int。
-type LockFreeSlice struct {
-	p atomic.Pointer[[]int]
+// LockFreeStack 是一个并发安全的栈。
+type LockFreeStack struct {
+	top atomic.Pointer[stackItem]
 }
 
-// NewLockFreeSlice 创建一个 LockFreeSlice, 初始内容为 s。
-func NewLockFreeSlice(s []int) *LockFreeSlice {
-	ret := &LockFreeSlice{}
-	ret.p.Store(&s)
-	return ret
+type stackItem struct {
+	Value int
+	Next  *stackItem
 }
 
-// Value 返回 l 的值。
-func (slice *LockFreeSlice) Value() []int {
-	return slices.Clone(*slice.p.Load())
-}
-
-// Append 类似内建函数 append, 但是可以在并发环境中使用。
-func (slice *LockFreeSlice) Append(s []int) {
+// Pop 弹出栈顶元素到 t。
+func (s *LockFreeStack) Pop() (t int, ok bool) {
 	for {
-		old := slice.p.Load()
-		new := append(slices.Clone(*old), s...)
-		if slice.p.CompareAndSwap(old, &new) {
+		top := s.top.Load()
+		if top == nil {
+			return 0, false
+		}
+		if s.top.CompareAndSwap(top, top.Next) {
+			return top.Value, true
+		}
+	}
+}
+
+// Push 向栈顶压入元素 t。
+func (s *LockFreeStack) Push(t int) {
+	var newItem = stackItem{Value: t}
+	for {
+		top := s.top.Load()
+		newItem.Next = top
+		if s.top.CompareAndSwap(top, &newItem) {
 			return
 		}
 	}
 }
 
 func main() {
-	var s = NewLockFreeSlice([]int{1})
+	var s LockFreeStack
 	var group sync.WaitGroup
 	group.Add(3)
 	go func() {
 		defer group.Done()
 		time.Sleep(time.Millisecond * 10)
-		s.Append([]int{2})
-		fmt.Println(s.Value())
+		s.Push(1)
 	}()
 	go func() {
 		defer group.Done()
 		time.Sleep(time.Millisecond * 10)
-		s.Append([]int{3, 4})
-		fmt.Println(s.Value())
+		s.Push(2)
+		s.Push(3)
 	}()
 	go func() {
 		defer group.Done()
 		time.Sleep(time.Millisecond * 10)
-		s.Append([]int{5, 6, 7})
-		fmt.Println(s.Value())
+		fmt.Println(s.Pop())
+		s.Push(4)
 	}()
 
 	group.Wait()
-	fmt.Println(s.Value())
+	for v, ok := s.Pop(); ok; v, ok = s.Pop() {
+		fmt.Println(v)
+	}
 }

@@ -14,5 +14,5 @@ type S struct {
 func main() {
 	var s S
 	// go vet 会对此行输出做出反应
-	fmt.Println(s) // 第 16 行
+	fmt.Println(s)
 }

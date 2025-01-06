@@ -101,7 +101,7 @@ func Select[T any](recvBranches []*Recv[T],
 		}
 	}
 
-	// execRandomNb 从 recvCases 和 sendCases 中
+	// execRandomNb 从 recvBranches 和 sendBranches 中
 	// 随机选择一个不会阻塞的分支并执行.
 	// 如果成功执行了一个分支, 返回 true, 否则返回 false.
 	// 调用时必须持有所有分支的锁.

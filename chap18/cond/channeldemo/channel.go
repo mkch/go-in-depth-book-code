@@ -13,7 +13,7 @@ type Channel[T any] struct {
 // Make 创建 Channel. 相当于 make(chan T).
 func Make[T any](capacity int) *Channel[T] {
 	if capacity <= 0 {
-		panic("invalid argument: cap must not be positive")
+		panic("invalid argument: cap must be positive")
 	}
 	c := &Channel[T]{cap: capacity}
 	c.cond.L = &sync.Mutex{}

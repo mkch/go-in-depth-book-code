@@ -13,10 +13,10 @@ func Add(a, b int) int {
 }
 
 // AddCurrying 是柯里化的 Add.
-// AddCurrying(a)返回一个函数 f, 调用 f(b) 将得到 a+b 的结果.
-func AddCurrying(a int) (f func(n int) int) {
+// AddCurrying(a)返回一个函数 f, 调用 f(b) 将得到 Add(a,b) 的结果.
+func AddCurrying(a int) (f func(b int) int) {
 	return func(n int) int {
-		return a + n
+		return Add(a, n)
 	}
 }
 

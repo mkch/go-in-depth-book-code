@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,7 +8,6 @@ import (
 )
 
 func main() {
-	flag.Parse()
 	resp, err := http.Get("https://github.com/mkch/iter2?go-get=1")
 	if err != nil {
 		panic(err)

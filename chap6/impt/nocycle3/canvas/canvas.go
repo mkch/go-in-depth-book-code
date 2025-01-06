@@ -19,7 +19,7 @@ func (c *Canvas) DrawPixel(x, y int, color uint32) {
 
 // DrawBitmap 在 c 的 (x,y) 坐标处画出 bitmap.
 func (c *Canvas) DrawBitmap(x, y int, bitmap *bitmap.Bitmap) {
-	cx, cy := bitmap.Dimension()
+	cx, cy := bitmap.Dimensions()
 	for x1 := 0; x < cx; x++ {
 		for y1 := 0; y < cy; y++ {
 			c.DrawPixel(x1+x, y1+y, bitmap.Pixel(x, y))

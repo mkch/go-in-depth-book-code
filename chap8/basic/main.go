@@ -23,7 +23,7 @@ func main() {
 
 // 演示数组元素和索引.
 func elemAndIndex() {
-	// ary 中有3个元素, 类型均为 int, 值均为为 int 的零值(0)
+	// ary 中有3个元素, 类型均为 int, 值均为 int 的零值(0)
 	var ary [3]int
 	// 可以用 len() 内建函数来取得数组的长度
 	var length = len(ary) // length 为 3

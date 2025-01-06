@@ -43,9 +43,9 @@ func basic() {
 	_, _, _, _, _ = l, c1, c2, c3, c4
 
 	var cr <-chan int // 只读 channel
-	cr = c1           // c1r 是 c1 的 "读端"
-	var cw <-chan int // 只写 channel
-	cw = c1           // c1w 是 c1 的 "写端"
+	cr = c1           // cr 是 c1 的 "读端"
+	var cw chan<- int // 只写 channel
+	cw = c1           // cw 是 c1 的 "写端"
 
 	c := make(chan<- int, 1)
 

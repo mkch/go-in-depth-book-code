@@ -34,13 +34,13 @@ func Search(ctx context.Context, keyword string) (*Result, error) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	bingRequest, err := http.NewRequestWithContext( // 1
+	bingRequest, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, bingURL.String(), nil)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	sogouRequest, err := http.NewRequestWithContext( // 2
+	sogouRequest, err := http.NewRequestWithContext(
 		ctx, http.MethodGet, sogouURL.String(), nil)
 	if err != nil {
 		log.Panic(err)
