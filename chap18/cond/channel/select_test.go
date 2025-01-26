@@ -3,6 +3,7 @@ package channel
 import (
 	"context"
 	"slices"
+	"sync"
 	"testing"
 	"time"
 )
@@ -254,4 +255,28 @@ func TestNoBranch(t *testing.T) {
 		t.Fatal("should block")
 	case <-ctx.Done():
 	}
+}
+
+// 此测试可能用于无法终结
+// Select 中试图锁定所有分支的代码，会导致死锁
+func TestDeadlock(t *testing.T) {
+	c1 := Make[int](0)
+	c2 := Make[int](0)
+
+	const COUNT = 50
+	var wg sync.WaitGroup
+	wg.Add(COUNT * 2)
+	for range COUNT {
+		go func() {
+			Select([]*Recv[int]{
+				{Chan: c1}, {Chan: c2},
+			}, nil, wg.Done)
+		}()
+		go func() {
+			Select([]*Recv[int]{
+				{Chan: c2}, {Chan: c1},
+			}, nil, wg.Done)
+		}()
+	}
+	wg.Wait()
 }

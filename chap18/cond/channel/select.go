@@ -42,6 +42,7 @@ func Select[T any](recvBranches []*Recv[T],
 	sendBranches []*Send[T],
 	defaultBranch Default) {
 	// 持有所有分支的锁
+	// !! DEADLOCK !!
 	var lock = func() {
 		for _, r := range recvBranches {
 			if r.Chan != nil {
