@@ -2,8 +2,8 @@ package oui
 
 import (
 	"os"
-	"ouidb"
-	"ouisql"
+	"oui/ouidb"
+	"oui/ouidb/ouisql"
 	"path/filepath"
 	"testing"
 )
@@ -16,8 +16,8 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			// 如果 OUIDB 不存在, 就生成它
-			os.MkdirAll(filepath.Dir(OUI_DB), 0600)
-			f, err := os.OpenFile(OUI_DB, os.O_WRONLY|os.O_CREATE, 0600)
+			os.MkdirAll(filepath.Dir(OUI_DB), 0777)
+			f, err := os.OpenFile(OUI_DB, os.O_WRONLY|os.O_CREATE, 0666)
 			if err != nil {
 				panic(err)
 			}
@@ -35,7 +35,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			// 如果 OUI_SQLITE 不存在, 就生成它
-			os.MkdirAll(filepath.Dir(OUI_SQLITE), 0600)
+			os.MkdirAll(filepath.Dir(OUI_SQLITE), 0777)
 			err = ouisql.Generate(OUI_SQLITE)
 			if err != nil {
 				panic(err)
@@ -45,7 +45,34 @@ func TestMain(m *testing.M) {
 		}
 	}
 
+	// 提前打开两个数据库，免得Benchmark时时间统计不准确
+	var closeOuidb func() error
+	ouidbBench, closeOuidb, err = newOuidb()
+	if err != nil {
+		panic(err)
+	}
+	defer closeOuidb()
+
+	sqliteBench, err = ouisql.NewDB(OUI_SQLITE)
+	if err != nil {
+		panic(err)
+	}
+	defer sqliteBench.Close()
+
 	os.Exit(m.Run())
+}
+
+var ouidbBench *ouidb.DB
+var sqliteBench *ouisql.DB
+
+func newOuidb() (db *ouidb.DB, close func() error, err error) {
+	f, err := os.Open(OUI_DB)
+	if err != nil {
+		return
+	}
+	close = f.Close
+	db, err = ouidb.NewDB(f)
+	return
 }
 
 func TestOuidbLookup(t *testing.T) {
@@ -105,28 +132,13 @@ func TestOuisqlLookup(t *testing.T) {
 }
 
 func BenchmarkOuidbLookup(b *testing.B) {
-	f, err := os.Open(OUI_DB)
-	if err != nil {
-		b.Fatal(err)
-	}
-	defer f.Close()
-	db, err := ouidb.NewDB(f)
-	if err != nil {
-		b.Fatal(err)
-	}
-
 	for range b.N {
-		db.Lookup("AC319D")
+		ouidbBench.Lookup("AC319D")
 	}
 }
 
 func BenchmarkOuisqlLookup(b *testing.B) {
-	db, err := ouisql.NewDB(OUI_SQLITE)
-	if err != nil {
-		b.Fatal(err)
-	}
-
 	for range b.N {
-		db.Lookup("AC319D")
+		sqliteBench.Lookup("AC319D")
 	}
 }
