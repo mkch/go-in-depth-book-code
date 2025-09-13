@@ -52,7 +52,7 @@ func NewG(pc int) {
 }
 
 // Schedule 为调度指令, 此指令执行一次 G 调度.
-// 本函数返回后, m 所关联的 G 会让出执行时间, 使得 gq 中的 G 有机会执行.
+// 本函数返回后, 当前 G 会让出执行时间, 使得 gq 中的 G 有机会执行.
 func Schedule(t *Thread) {
 	select {
 	case g := <-gq:

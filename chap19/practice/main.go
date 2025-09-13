@@ -48,9 +48,9 @@ func DecodeBody(r io.Reader, dest any) error {
 	return nil
 }
 
-// DecodeQuey 把 m 解码后放入 dest 所指向的变量中.
+// DecodeQuery 把 m 解码后放入 dest 所指向的变量中.
 // 类似 json.Unmarshal().
-func DecodeQuey(m url.Values, dest any) error {
+func DecodeQuery(m url.Values, dest any) error {
 	// 实现代码省略
 	return nil
 }
@@ -96,7 +96,7 @@ func Handle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var query Query
-	if err := DecodeQuey(r.URL.Query(), &query); err != nil {
+	if err := DecodeQuery(r.URL.Query(), &query); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	} else if err = Validate(&query); err != nil {
@@ -124,7 +124,7 @@ func Handle2(w http.ResponseWriter, r *http.Request) {
 	var query Query
 	var header Header
 	if !Decode[io.Reader](w, DecodeBody, r.Body, &body) ||
-		!Decode(w, DecodeQuey, r.URL.Query(), &query) ||
+		!Decode(w, DecodeQuery, r.URL.Query(), &query) ||
 		!Decode(w, DecodeHeader, r.Header, &header) {
 		return
 	}
