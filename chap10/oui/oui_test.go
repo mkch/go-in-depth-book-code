@@ -59,7 +59,7 @@ func TestMain(m *testing.M) {
 	}
 	defer sqliteBench.Close()
 
-	os.Exit(m.Run())
+	m.Run()
 }
 
 var ouidbBench *ouidb.DB
