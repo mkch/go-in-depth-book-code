@@ -60,7 +60,7 @@ func Write(w io.Writer, data []OUI) error {
 		}
 
 		// 桶数据的格式为
-		// 1字节列表长度n, 列表项0, 应列表项1 ... 应列表项n
+		// 1字节列表长度n, 列表项0, 应列表项1 ... 应列表项n-1
 
 		bucketsData.WriteByte(byte(bucketLen)) // 写列表长度
 		for _, oui := range b {
