@@ -26,14 +26,11 @@ func NewThread(id int, proc int) {
 	t := &Thread{id: id, pc: proc}
 	// 在此 VM 中, 本地线程即 goroutine
 	go func() {
-		for {
-			for inst := Code[t.pc]; inst != nil; inst = Code[t.pc] {
-				t.pc++  // 指向下一条指令
-				inst(t) // 执行当前指令
-			}
+		for inst := Code[t.pc]; inst != nil; inst = Code[t.pc] {
+			t.pc++  // 指向下一条指令
+			inst(t) // 执行当前指令
 		}
 	}()
-	return
 }
 
 func main() {
