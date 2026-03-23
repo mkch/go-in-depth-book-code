@@ -1,3 +1,2 @@
-# GoExplainedBookSrc
+# 《深入理解Go语言——规范、原理与实践》随书源代码
 
- Source code of Go Explained book.
